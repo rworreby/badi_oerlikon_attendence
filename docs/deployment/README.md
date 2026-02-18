@@ -4,6 +4,10 @@ Azure deployment guides, checklists, and infrastructure setup.
 
 ## 📚 Documents in This Directory
 
+- **DEPLOYMENT_GUIDE_WEBSOCKET.md** - **Main deployment guide** (moved from root)
+- **AZURE_INSTALLATION_SUMMARY.md** - Azure tool setup summary
+- **AZURE_SETUP_COMPLETE.md** - Quick reference for setup
+- **AZURE_TOOLS_SETUP.md** - Detailed tool installation guide
 - **AZURE_DEPLOYMENT.md** - Azure-specific setup and configuration
 - **AZURE_FUNCTIONS_GUIDE.md** - Azure Functions configuration guide
 - **DEPLOYMENT_CHECKLIST.md** - Pre-deployment verification checklist
@@ -12,11 +16,13 @@ Azure deployment guides, checklists, and infrastructure setup.
 
 ## 🎯 Deployment Path
 
-**Step 1:** Read parent [DEPLOYMENT_GUIDE_WEBSOCKET.md](../../DEPLOYMENT_GUIDE_WEBSOCKET.md) for overview
+**Step 1:** Read [DEPLOYMENT_GUIDE_WEBSOCKET.md](./DEPLOYMENT_GUIDE_WEBSOCKET.md) for overview
 
-**Step 2:** Follow [AZURE_DEPLOYMENT.md](./AZURE_DEPLOYMENT.md) for step-by-step setup
+**Step 2:** Complete [AZURE_TOOLS_SETUP.md](./AZURE_TOOLS_SETUP.md) to install tools
 
-**Step 3:** Use [DEPLOYMENT_CHECKLIST.md](./DEPLOYMENT_CHECKLIST.md) to verify everything
+**Step 3:** Follow [AZURE_DEPLOYMENT.md](./AZURE_DEPLOYMENT.md) for step-by-step setup
+
+**Step 4:** Use [DEPLOYMENT_CHECKLIST.md](./DEPLOYMENT_CHECKLIST.md) to verify everything
 
 **Step 4:** Check [READY_TO_DEPLOY.md](./READY_TO_DEPLOY.md) before going live
 

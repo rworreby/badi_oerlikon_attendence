@@ -7,7 +7,7 @@ Complete documentation organized by topic.
 **New to the project?** Start here:
 1. Read the main [README.md](../README.md)
 2. Follow [QUICKSTART.md](../QUICKSTART.md) (5 minutes)
-3. Deploy using [DEPLOYMENT_GUIDE_WEBSOCKET.md](../DEPLOYMENT_GUIDE_WEBSOCKET.md)
+3. Deploy using [deployment/DEPLOYMENT_GUIDE_WEBSOCKET.md](./deployment/DEPLOYMENT_GUIDE_WEBSOCKET.md)
 
 ## 📂 Documentation Structure
 
@@ -26,7 +26,10 @@ System design, architecture decisions, and WebSocket implementation details.
 Azure deployment guides, checklists, and infrastructure setup.
 
 **Key documents:**
-- `DEPLOYMENT_GUIDE_WEBSOCKET.md` - **Main deployment guide** (in parent dir)
+- `DEPLOYMENT_GUIDE_WEBSOCKET.md` - **Main deployment guide**
+- `AZURE_INSTALLATION_SUMMARY.md` - Azure tool setup summary
+- `AZURE_SETUP_COMPLETE.md` - Quick reference for setup
+- `AZURE_TOOLS_SETUP.md` - Detailed tool installation
 - `AZURE_DEPLOYMENT.md` - Azure-specific setup details
 - `AZURE_FUNCTIONS_GUIDE.md` - Functions configuration guide
 - `DEPLOYMENT_CHECKLIST.md` - Pre-deployment verification
@@ -44,6 +47,8 @@ Technical details, troubleshooting, local testing, and implementation notes.
 - `TIMEOUT_QUICK_REF.md` - Timeout quick reference
 - `CHANGES_MADE.md` - Summary of all changes made
 - `FILES_CREATED.md` - List of all created files
+- `DOCUMENTATION_REORGANIZATION.md` - Documentation cleanup history
+- `REORGANIZATION_SUMMARY.md` - Reorganization summary
 
 ### 📜 [migration/](./migration/)
 Migration history from local scrapers to Azure Functions with WebSocket.

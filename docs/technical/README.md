@@ -11,6 +11,8 @@ Technical implementation details, troubleshooting, and local development guides.
 - **TIMEOUT_QUICK_REF.md** - Timeout constraints quick reference
 - **CHANGES_MADE.md** - Summary of changes made to the project
 - **FILES_CREATED.md** - List of all created files
+- **DOCUMENTATION_REORGANIZATION.md** - Documentation organization history
+- **REORGANIZATION_SUMMARY.md** - Reorganization summary and cleanup notes
 
 ## 🎯 Common Tasks
 
