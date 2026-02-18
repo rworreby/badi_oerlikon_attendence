@@ -9,6 +9,7 @@ from websocket import create_connection, WebSocketTimeoutException
 WS_URL = "wss://badi-public.crowdmonitor.ch:9591/api"
 TARGET_UID = "SSD-7"  # uid used in the page for the site
 
+
 def fetch_once(timeout=5):
     ws = create_connection(WS_URL, timeout=timeout)
     try:
@@ -27,6 +28,7 @@ def fetch_once(timeout=5):
         return None
     finally:
         ws.close()
+
 
 if __name__ == "__main__":
     try:
