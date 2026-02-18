@@ -1,6 +1,6 @@
 # Azure Tools Installation Guide
 
-**Date:** February 17, 2026  
+**Date:** February 17, 2026
 **Status:** ✅ Installation Complete
 
 ---
@@ -24,8 +24,9 @@ The installation added nvm to your shell configuration. To use the new Node.js v
 
 ```bash
 export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-```
+[ -s "$NVM*DIR/nvm.sh" ] && \. "$NVM*DIR/nvm.sh"
+
+```text
 
 Or close and reopen your terminal.
 
@@ -33,7 +34,8 @@ Or close and reopen your terminal.
 
 ```bash
 az login
-```
+
+```text
 
 This will open a browser for authentication.
 
@@ -41,13 +43,15 @@ This will open a browser for authentication.
 
 ```bash
 az account set --subscription cc569079-9e12-412d-8dfb-a5d60a028f75
-```
+
+```text
 
 ### 4. Verify Setup
 
 ```bash
 az account show
-```
+
+```text
 
 Should display your subscription details.
 
@@ -58,65 +62,88 @@ Should display your subscription details.
 ### Azure CLI Commands
 
 ```bash
+
 # Show current subscription
+
 az account show
 
 # List all subscriptions
+
 az account list --output table
 
 # Switch subscription
+
 az account set --subscription <subscription-id>
 
 # Login to Azure
+
 az login
 
 # Logout
+
 az logout
 
 # Deploy resource group
+
 az group create --name mygroup --location eastus
 
 # List resources
+
 az resource list --output table
-```
+
+```text
 
 ### Azure Functions Core Tools Commands
 
 ```bash
+
 # Check version
+
 func --version
 
 # Create a new function project
+
 func init MyFunctionProject
 
 # Start function locally (with debugging)
+
 func start
 
 # Create a new function
+
 func new --name MyFunction --template "Timer trigger"
 
 # Publish to Azure
+
 func azure functionapp publish <function-app-name>
 
 # List function apps
+
 func list
-```
+
+```text
 
 ### npm Commands
 
 ```bash
+
 # Check version
+
 npm --version
 
 # Install package globally
+
 npm install -g <package-name>
 
 # Install package locally
+
 npm install <package-name>
 
 # Update npm
+
 npm install -g npm@latest
-```
+
+```text
 
 ---
 
@@ -125,40 +152,54 @@ npm install -g npm@latest
 ### 1. Deploy WebSocket Listener to Azure
 
 ```bash
+
 # Read the deployment guide
-cat DEPLOYMENT_GUIDE_WEBSOCKET.md
+
+cat DEPLOYMENT*GUIDE*WEBSOCKET.md
 
 # Follow the steps in the guide
-```
+
+```text
 
 ### 2. Test Locally with Functions Core Tools
 
 ```bash
+
 # Navigate to the functions directory
+
 cd src/functions/websocket_listener
 
 # Start the local Functions runtime
+
 func start
-```
+
+```text
 
 Expected output:
-```
+
+```text
+
 Azure Functions Core Tools (4.7.0)
 Function Runtime Version: 4.x
 ...
 Now listening on: http://0.0.0.0:7071
-```
+
+```text
 
 ### 3. Deploy to Azure
 
 ```bash
+
 # Publish the function
+
 func azure functionapp publish badi-oerlikon-listener
 
 # Monitor execution
+
 az functionapp logs tail --resource-group badi-oerlikon-rg \
   --name badi-oerlikon-listener
-```
+
+```text
 
 ---
 
@@ -166,57 +207,70 @@ az functionapp logs tail --resource-group badi-oerlikon-rg \
 
 ### Issue: `func` command not found
 
-**Solution:**
+### Solution
+
 ```bash
 export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+[ -s "$NVM*DIR/nvm.sh" ] && \. "$NVM*DIR/nvm.sh"
 func --version
-```
+
+```text
 
 ### Issue: Azure CLI not found
 
-**Solution:**
+### Solution
+
 ```bash
 az --version
-```
+
+```text
 
 If not found, ensure it was installed via apt-get.
 
 ### Issue: Node.js version too old
 
-**Solution:**
+### Solution
+
 ```bash
+
 # Check current version
+
 node --version
 
 # If less than v14, upgrade with nvm
+
 nvm install 18
 nvm use 18
 nvm alias default 18
-```
+
+```text
 
 ### Issue: Permission denied during npm install
 
-**Solution:**
+### Solution
+
 ```bash
+
 # Use sudo or nvm's global installation
+
 sudo npm install -g azure-functions-core-tools@4
-```
+
+```text
 
 ---
 
 ## 📚 Documentation Links
 
-**Azure CLI Documentation:**
+### Azure CLI Documentation
 https://docs.microsoft.com/cli/azure/
 
-**Azure Functions Core Tools:**
+### Azure Functions Core Tools
 https://github.com/Azure/azure-functions-core-tools
 
-**Azure Functions Documentation:**
+### Azure Functions Documentation
 https://docs.microsoft.com/azure/azure-functions/
 
-**Node.js Version Manager (nvm):**
+### Node.js Version Manager (nvm)
 https://github.com/nvm-sh/nvm
 
 ---
@@ -227,31 +281,33 @@ https://github.com/nvm-sh/nvm
    ```bash
    az login
    az account set --subscription cc569079-9e12-412d-8dfb-a5d60a028f75
-   ```
+   ```text
 
-2. **Deploy infrastructure (see DEPLOYMENT_GUIDE_WEBSOCKET.md):**
+2. **Deploy infrastructure (see DEPLOYMENT*GUIDE*WEBSOCKET.md):**
    ```bash
    # Create resource group
+
    az group create --name badi-oerlikon-rg --location eastus
-   
+
    # Deploy Bicep templates
+
    az deployment group create \
      --resource-group badi-oerlikon-rg \
      --template-file infra/main.bicep
-   ```
+   ```text
 
 3. **Deploy function:**
    ```bash
    cd src/functions/websocket_listener
    func azure functionapp publish badi-oerlikon-listener
-   ```
+   ```text
 
 4. **Monitor execution:**
    ```bash
    func azure functionapp logs tail \
      --resource-group badi-oerlikon-rg \
      --name badi-oerlikon-listener
-   ```
+   ```text
 
 ---
 
@@ -259,10 +315,10 @@ https://github.com/nvm-sh/nvm
 
 - [Main README](./README.md)
 - [Quick Start Guide](./QUICKSTART.md)
-- [Deployment Guide](./DEPLOYMENT_GUIDE_WEBSOCKET.md)
+- [Deployment Guide](./DEPLOYMENT*GUIDE*WEBSOCKET.md)
 - [Azure Documentation](https://docs.microsoft.com/azure/)
 
 ---
 
-**Installation Date:** February 17, 2026  
+**Installation Date:** February 17, 2026
 **Status:** ✅ All tools successfully installed and verified

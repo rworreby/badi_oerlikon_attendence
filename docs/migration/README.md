@@ -4,7 +4,7 @@ Historical migration records from local scrapers to Azure Functions with WebSock
 
 ## 📚 Documents in This Directory
 
-- **MIGRATION_CONTAINER_TO_FUNCTIONS.md** - Migration from Container Instance to Azure Functions
+- **MIGRATION*CONTAINER*TO_FUNCTIONS.md** - Migration from Container Instance to Azure Functions
 - **MIGRATION_COMPLETE.md** - Migration completion report
 - **CLEANUP_SUMMARY.md** - Cleanup actions and removed files
 - **TRANSFORMATION_SUMMARY.md** - Complete transformation overview
@@ -32,13 +32,13 @@ Historical migration records from local scrapers to Azure Functions with WebSock
 
 ## 🎯 Key Changes
 
-**Migration Benefits:**
+### Migration Benefits
 - Cost reduction: 85% ($98/month saved)
 - Data improvement: 720x more readings
 - Reliability: Serverless auto-scaling
 - Maintenance: No infrastructure to manage
 
-**Architecture Evolution:**
+### Architecture Evolution
 - Hourly scraping → 5-second WebSocket updates
 - 1 data point/hour → 12,000+ data points/day
 - Manual triggering → Automatic timer-based
@@ -49,7 +49,7 @@ Historical migration records from local scrapers to Azure Functions with WebSock
 - Deployment: See [../deployment/](../deployment/README.md)
 - Technical: See [../technical/](../technical/README.md)
 
-## 💡 Why WebSocket?
+## 💡 Why WebSocket
 
 Traditional scraping (hourly):
 - ~24 data points per day

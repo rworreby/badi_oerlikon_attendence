@@ -4,12 +4,12 @@
 
 ### 1. Converted to Azure Functions ✅
 
-**Changed:**
+### Changed
 - Container Instance → Azure Functions (Consumption Plan)
 - Docker Crawler → Python Function with Timer Trigger
 - Continuous loop → Event-driven execution
 
-**Benefits:**
+### Benefits
 - 85% cost reduction (~$95/month saved)
 - Automatic scaling
 - Simpler management
@@ -18,15 +18,20 @@
 ### 2. Files Removed ✅
 
 #### Docker/Container Files
-```
+
+```text
+
 ❌ docker/Dockerfile.crawler              - No longer needed
 ❌ docker-compose.yml                     - Replaced
-```
+
+```text
 
 #### Legacy ORM/Database Files
-```
+
+```text
+
 ❌ src/db/                               - Entire directory removed
-  ❌ __init__.py
+  ❌ **init**.py
   ❌ models.py                           - SQLAlchemy models
   ❌ repository.py                       - Old repository layer
   ❌ session.py                          - Database sessions
@@ -35,77 +40,110 @@
   ❌ env.py                              - Alembic env config
 
 ❌ alembic.ini                           - Alembic configuration
-```
+
+```text
 
 #### Crawler Service Files
-```
+
+```text
+
 ❌ src/services/crawler_service.py       - Old continuous service
 ❌ src/crawler_main.py                   - Service entry point
-```
+
+```text
 
 #### Database Scripts
-```
+
+```text
+
 ❌ scripts/populate_db.py                - DB population
-❌ scripts/scrape_ws_test.py             - WebSocket test
-❌ scripts/websocket_listener_oerlikon.py - WebSocket listener
-```
+❌ scripts/scrape*ws*test.py             - WebSocket test
+❌ scripts/websocket*listener*oerlikon.py - WebSocket listener
+
+```text
 
 #### Test Files
-```
+
+```text
+
 ❌ src/tests/test_db.py                 - Database tests
-```
+
+```text
 
 #### Experimental Directories
-```
+
+```text
+
 ❌ clean_code/                          - Old test directory
 ❌ live-csv-plot/                       - Experimental plotting
 ❌ temp.py                              - Temporary file
 ❌ fetched_page.html                    - Temporary file
-```
+
+```text
 
 ### 3. Files Added ✅
 
 #### Azure Function Implementation
-```
-✅ src/functions/crawler_timer/__init__.py       - Function handler
+
+```text
+
+✅ src/functions/crawler_timer/**init**.py       - Function handler
 ✅ src/functions/crawler_timer/function.json     - Timer config
 ✅ src/functions/requirements.txt                - Function dependencies
 ✅ src/functions/local.settings.json             - Local dev config
-```
+
+```text
 
 #### Documentation
-```
-✅ AZURE_FUNCTIONS_GUIDE.md                      - Setup guide
-✅ MIGRATION_CONTAINER_TO_FUNCTIONS.md          - Migration details
-```
+
+```text
+
+✅ AZURE*FUNCTIONS*GUIDE.md                      - Setup guide
+✅ MIGRATION*CONTAINER*TO_FUNCTIONS.md          - Migration details
+
+```text
 
 #### Docker Compose for Local Testing
-```
+
+```text
+
 ✅ docker-compose.functions.yml                 - Function testing
-```
+
+```text
 
 ### 4. Files Updated ✅
 
 #### Infrastructure
-```
+
+```text
+
 ✅ azure/main.bicep                    - Added Azure Functions resources
-```
+
+```text
 
 #### Deployment Automation
-```
+
+```text
+
 ✅ .github/workflows/azure-deploy.yml  - Removed Container Instance steps
-```
+
+```text
 
 #### Dependencies
-```
+
+```text
+
 ✅ requirements.txt                    - Removed SQLAlchemy, Alembic
                                        - Added azure-functions
-```
+
+```text
 
 ## Project Structure - Before & After
 
 ### Before
-```
+
+```text
+
 src/
 ├── api/
 ├── azure_storage/
@@ -116,7 +154,7 @@ src/
 │   ├── models.py
 │   ├── repository.py
 │   ├── session.py
-│   └── __init__.py
+│   └── **init**.py
 ├── migrations/                    ❌ Removed
 │   └── env.py
 ├── utils/
@@ -124,35 +162,42 @@ src/
 ├── tests/
 │   ├── test_db.py                ❌ Removed
 │   └── test_scraper.py
-```
+
+```text
 
 ### After
-```
+
+```text
+
 src/
 ├── api/
 ├── azure_storage/
 ├── scraper/
 ├── functions/                     ✅ Added
 │   ├── crawler_timer/
-│   │   ├── __init__.py           ✅ Function handler
+│   │   ├── **init**.py           ✅ Function handler
 │   │   └── function.json         ✅ Configuration
 │   ├── requirements.txt          ✅ Dependencies
 │   └── local.settings.json       ✅ Local config
 ├── utils/
 └── tests/
     └── test_scraper.py
-```
+
+```text
 
 ## Dependencies Changes
 
 ### Removed
+
 - ❌ SQLAlchemy==1.4.22        (ORM, no longer needed)
 - ❌ alembic==1.7.5            (Migrations, no longer needed)
 
 ### Added
+
 - ✅ azure-functions==1.13.0   (Function runtime)
 
 ### Kept
+
 - ✅ Flask==2.0.1
 - ✅ flask-cors==3.0.10
 - ✅ requests==2.26.0
@@ -166,22 +211,22 @@ src/
 
 ### GitHub Actions Workflow
 
-**Removed Steps:**
+### Removed Steps
 - Build Crawler Docker Image
 - Push Crawler Image
 - Update Crawler Container
 
-**Updated Steps:**
+### Updated Steps
 - Deploy now includes Function App deployment
 - Function code packaged and deployed via zip
 
 ### Bicep Infrastructure
 
-**Removed:**
+### Removed
 - Container Registry resource
 - Container Instance configuration
 
-**Added:**
+### Added
 - Function App resource
 - App Service Plan (Consumption tier)
 - Application Insights
@@ -191,35 +236,44 @@ src/
 
 ### Monthly Costs
 
-**Before (Container Instance):**
-```
+### Before (Container Instance)
+
+```text
+
 Web App (B1):        $12
 Blob Storage:        $1
 Container Instance:  $100
 Total:               $113/month
-```
 
-**After (Azure Functions):**
-```
+```text
+
+### After (Azure Functions)
+
+```text
+
 Web App (B1):        $12
 Blob Storage:        $1
 Function App:        $1-5
 Total:               $14-18/month
-```
+
+```text
 
 **Savings: ~$95-98 per month (85% reduction)**
 
 ## Performance Impact
 
 ### Execution Time
+
 - **Before**: Always running, instant availability
 - **After**: Cold start ~3-5s, subsequent <1s
 
 ### Reliability
+
 - **Before**: Manual management, potential downtime
 - **After**: Azure-managed, higher availability
 
 ### Scaling
+
 - **Before**: Fixed resource allocation
 - **After**: Automatic scaling, scales to zero
 
@@ -227,33 +281,46 @@ Total:               $14-18/month
 
 ### Local Development
 
-**Before:**
+### Before
+
 ```bash
 docker-compose up
 python -m src.crawler_main
-```
 
-**After:**
+```text
+
+### After
+
 ```bash
 docker-compose -f docker-compose.functions.yml up
+
 # Function runs automatically on schedule
-```
+
+```text
 
 ### Manual Testing
 
-**Before:**
+### Before
+
 ```bash
+
 # Had to manage container lifecycle
+
 az container create ...
 az container logs ...
-```
 
-**After:**
+```text
+
+### After
+
 ```bash
+
 # Trigger function directly
+
 curl https://{func-app}/admin/functions/crawler_timer \
   -H "x-functions-key: {key}"
-```
+
+```text
 
 ## Migration Checklist
 
@@ -275,18 +342,22 @@ curl https://{func-app}/admin/functions/crawler_timer \
 ## Next Steps
 
 1. **Test locally**: `docker-compose -f docker-compose.functions.yml up`
+
 2. **Deploy infrastructure**: `cd azure && ./deploy.sh`
-3. **Deploy function code**: Follow AZURE_FUNCTIONS_GUIDE.md
+
+3. **Deploy function code**: Follow AZURE*FUNCTIONS*GUIDE.md
+
 4. **Monitor execution**: Check Azure Portal or CLI logs
+
 5. **Verify data**: Check blob storage for new data files
 
 ## Documentation Updates
 
-**New Guides:**
-- ✅ AZURE_FUNCTIONS_GUIDE.md - Complete setup guide
-- ✅ MIGRATION_CONTAINER_TO_FUNCTIONS.md - Migration details
+### New Guides
+- ✅ AZURE*FUNCTIONS*GUIDE.md - Complete setup guide
+- ✅ MIGRATION*CONTAINER*TO_FUNCTIONS.md - Migration details
 
-**Still Valid:**
+### Still Valid
 - ✅ QUICKSTART.md
 - ✅ AZURE_DEPLOYMENT.md (some updates needed)
 - ✅ ARCHITECTURE.md (updated for Functions)
@@ -294,6 +365,7 @@ curl https://{func-app}/admin/functions/crawler_timer \
 ## Files Summary
 
 ### Total Files Removed: 18
+
 - Docker files: 1
 - Service files: 2
 - Database files: 8
@@ -303,36 +375,45 @@ curl https://{func-app}/admin/functions/crawler_timer \
 - Experimental directories: 2
 
 ### Total Files Added: 6
+
 - Function code: 3
 - Configuration: 2
 - Docker Compose: 1
 
 ### Total Files Updated: 4
+
 - Bicep template: 1
 - GitHub Actions: 1
 - Requirements: 1
-- Services __init__: 1
+- Services **init**: 1
 
 ## Verification
 
 Run this to verify cleanup:
 
 ```bash
+
 # Should show no db/ directory
+
 ls src/
 
 # Should show no alembic.ini
+
 ls alembic.ini
 
 # Should show only webapp Dockerfile
+
 ls docker/
 
 # Should show new functions directory
+
 ls src/functions/
 
 # Should show updated requirements (no SQLAlchemy/alembic)
+
 cat requirements.txt
-```
+
+```text
 
 ---
 

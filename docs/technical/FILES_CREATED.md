@@ -4,7 +4,8 @@ This document lists all files created or modified as part of the Azure transform
 
 ## New Directories
 
-```
+```text
+
 azure/                    - Azure infrastructure and deployment
 docker/                   - Docker container definitions
 .github/workflows/        - GitHub Actions CI/CD
@@ -12,7 +13,8 @@ src/api/                  - Flask REST API
 src/api/static/           - Frontend assets (HTML, CSS, JS)
 src/azure_storage/        - Azure Blob Storage integration
 src/services/             - Business logic services
-```
+
+```text
 
 ## New Core Files
 
@@ -29,22 +31,22 @@ src/services/             - Business logic services
 | File | Purpose |
 |------|---------|
 | `src/api/app.py` | Flask REST API application |
-| `src/api/__init__.py` | API module initialization |
+| `src/api/**init**.py` | API module initialization |
 
 ### Azure Storage Integration
 
 | File | Purpose |
 |------|---------|
-| `src/azure_storage/blob_adapter.py` | Low-level Azure Blob Storage client |
+| `src/azure*storage/blob*adapter.py` | Low-level Azure Blob Storage client |
 | `src/azure_storage/repository.py` | Data persistence layer |
-| `src/azure_storage/__init__.py` | Module initialization |
+| `src/azure_storage/**init**.py` | Module initialization |
 
 ### Crawler Service
 
 | File | Purpose |
 |------|---------|
 | `src/services/crawler_service.py` | Continuous crawler implementation |
-| `src/services/__init__.py` | Services module initialization |
+| `src/services/**init**.py` | Services module initialization |
 | `src/crawler_main.py` | Crawler entry point |
 
 ### Frontend Assets
@@ -95,6 +97,7 @@ src/services/             - Business logic services
 ## File Statistics
 
 ### New Files Created
+
 - Total: 22 files
 - Python files: 8
 - Documentation: 6
@@ -104,6 +107,7 @@ src/services/             - Business logic services
 - CI/CD: 1
 
 ### Total Lines of Code (Approximate)
+
 - Python: 1,500+ lines
 - Frontend (HTML/CSS/JS): 800+ lines
 - Bicep: 200+ lines
@@ -112,8 +116,9 @@ src/services/             - Business logic services
 
 ## Directory Tree
 
-```
-badi_oerlikon_attendence/
+```text
+
+badi*oerlikon*attendence/
 │
 ├── azure/
 │   ├── main.bicep                    (120 lines)
@@ -131,7 +136,7 @@ badi_oerlikon_attendence/
 ├── src/
 │   ├── api/
 │   │   ├── app.py                    (180 lines)
-│   │   ├── __init__.py               (3 lines)
+│   │   ├── **init**.py               (3 lines)
 │   │   └── static/
 │   │       ├── index.html            (90 lines)
 │   │       ├── style.css             (350 lines)
@@ -140,11 +145,11 @@ badi_oerlikon_attendence/
 │   ├── azure_storage/
 │   │   ├── blob_adapter.py           (200 lines)
 │   │   ├── repository.py             (90 lines)
-│   │   └── __init__.py               (5 lines)
+│   │   └── **init**.py               (5 lines)
 │   │
 │   ├── services/
 │   │   ├── crawler_service.py        (140 lines)
-│   │   └── __init__.py               (3 lines)
+│   │   └── **init**.py               (3 lines)
 │   │
 │   ├── crawler_main.py               (25 lines)
 │   ├── scraper/                      (existing)
@@ -162,17 +167,20 @@ badi_oerlikon_attendence/
 ├── GITHUB_SECRETS.md                 (280 lines)
 ├── TRANSFORMATION_SUMMARY.md         (280 lines)
 └── DEPLOYMENT_CHECKLIST.md           (330 lines)
-```
+
+```text
 
 ## Key Additions by Category
 
 ### Backend
+
 - ✅ Flask REST API with 5 endpoints
 - ✅ Azure Blob Storage integration
 - ✅ Continuous crawler service
 - ✅ Error handling and logging
 
 ### Frontend
+
 - ✅ Responsive HTML5 dashboard
 - ✅ Real-time data display with auto-refresh
 - ✅ Historical data browser
@@ -180,18 +188,21 @@ badi_oerlikon_attendence/
 - ✅ JavaScript for dynamic updates
 
 ### Infrastructure
+
 - ✅ Bicep IaC templates
 - ✅ Automated deployment script
 - ✅ Docker containerization
 - ✅ Docker Compose for local dev
 
 ### DevOps
+
 - ✅ GitHub Actions CI/CD pipeline
 - ✅ Automated builds and tests
 - ✅ Image push to registry
 - ✅ Auto-deployment on main branch
 
 ### Documentation
+
 - ✅ Comprehensive deployment guides
 - ✅ Architecture documentation
 - ✅ Quick start guide
@@ -201,69 +212,94 @@ badi_oerlikon_attendence/
 ## Usage Instructions by File
 
 ### To Deploy
+
 1. Review `AZURE_DEPLOYMENT.md`
+
 2. Configure `GITHUB_SECRETS.md`
+
 3. Use `azure/deploy.sh`
 
 ### To Develop Locally
+
 1. Follow `QUICKSTART.md`
+
 2. Use `docker-compose.yml`
+
 3. Edit files in `src/` and `src/api/static/`
 
 ### To Understand Architecture
+
 1. Read `ARCHITECTURE.md`
+
 2. Review `TRANSFORMATION_SUMMARY.md`
+
 3. Check `azure/main.bicep` for resources
 
 ### To Deploy New Features
+
 1. Code changes in `src/`
+
 2. Push to GitHub `main` branch
+
 3. GitHub Actions automatically builds and deploys
 
 ## Version Control
 
 ### Files to NOT Commit
-```
+
+```text
+
 .env                              (use .env.example)
 venv/                            (virtual environment)
-__pycache__/                     (Python cache)
+**pycache**/                     (Python cache)
 .DS_Store                        (macOS)
 *.pyc                            (compiled Python)
-```
+
+```text
 
 ### Files to Commit
-```
+
+```text
+
 All source code (src/)
 All configuration (azure/, docker/)
 All documentation (*.md)
 All CI/CD workflows (.github/)
 requirements.txt
 .env.example
-```
+
+```text
 
 ## Backup & Recovery
 
 ### Critical Files to Backup
+
 - `GITHUB_SECRETS.md` configuration
 - `.env` (never commit, but keep locally)
 - Bicep deployment history
 - Container image registry
 
 ### How to Restore
+
 1. Git clone repository
+
 2. Follow `QUICKSTART.md`
+
 3. Run `azure/deploy.sh`
+
 4. GitHub Actions CI/CD handles the rest
 
 ## Performance Notes
 
 ### File Sizes (Approximate)
+
 - Largest Python file: `src/api/app.py` (180 lines)
 - Largest CSS file: `src/api/static/style.css` (350 lines)
 - Largest Bicep file: `azure/main.bicep` (120 lines)
 - Largest Documentation: `AZURE_DEPLOYMENT.md` (520 lines)
 
 ### Network Transfer
+
 - Web app image: ~200 MB (Python 3.9 slim + dependencies)
 - Crawler image: ~180 MB (Python 3.9 slim + dependencies)
 - Frontend assets: ~50 KB (gzipped)
@@ -271,11 +307,17 @@ requirements.txt
 ## Next Steps After Setup
 
 1. ✅ Review all files in this summary
+
 2. ✅ Follow deployment checklist
+
 3. ✅ Configure GitHub secrets
+
 4. ✅ Deploy to Azure
+
 5. ✅ Test all features
+
 6. ✅ Monitor application
+
 7. ✅ Set up alerts
 
 ## Support

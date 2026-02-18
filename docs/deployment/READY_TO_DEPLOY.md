@@ -11,16 +11,18 @@
 
 ### ✅ Code Implementation
 
-```
+```text
+
 src/functions/websocket_listener/
-├── __init__.py                    ✅ Main handler (COMPLETE)
+├── **init**.py                    ✅ Main handler (COMPLETE)
 ├── websocket_handler.py           ✅ CrowdMonitor WebSocket logic (COMPLETE)
 ├── function.json                  ✅ Timer: every 5 min (COMPLETE)
 ├── requirements.txt               ✅ All dependencies (COMPLETE)
 └── local.settings.json            ✅ Local config (COMPLETE)
-```
 
-**Key Configuration:**
+```text
+
+### Key Configuration
 - WebSocket URL: `wss://badi-public.crowdmonitor.ch:9591/api`
 - Target UID: `SSD-7` (BADI Oerlikon)
 - Occupancy Field: `currentfill`
@@ -35,8 +37,8 @@ src/functions/websocket_listener/
 
 ### ✅ Documentation
 
-- `DEPLOYMENT_GUIDE_WEBSOCKET.md` - Complete deployment instructions
-- `WEBSOCKET_BADI_IMPLEMENTATION.md` - BADI-specific implementation
+- `DEPLOYMENT*GUIDE*WEBSOCKET.md` - Complete deployment instructions
+- `WEBSOCKET*BADI*IMPLEMENTATION.md` - BADI-specific implementation
 - 25 total markdown files covering all aspects
 
 ---
@@ -46,16 +48,22 @@ src/functions/websocket_listener/
 ### 1. Test Locally (Optional but Recommended)
 
 ```bash
+
 # Start with Docker
+
 docker-compose -f docker-compose.functions.yml up
 
 # In another terminal
+
 cd src/functions/websocket_listener
 func start
-```
 
-**Expected Output:**
-```
+```text
+
+### Expected Output
+
+```text
+
 Connected to WebSocket: wss://badi-public.crowdmonitor.ch:9591/api
 Sent 'all' command to WebSocket
 Update 1: occupancy=45
@@ -63,24 +71,30 @@ Update 2: occupancy=45
 ... (60 updates total)
 Collected 60 updates in 5-minute window
 Stats: count=60, min=45, max=52, avg=48.3
-```
+
+```text
 
 ### 2. Deploy Infrastructure
 
 ```bash
+
 # Set variables
+
 SUBSCRIPTION="cc569079-9e12-412d-8dfb-a5d60a028f75"
 RESOURCE_GROUP="badi-oerlikon-rg"
 REGION="westeurope"
 
 # Authenticate
+
 az login
 az account set --subscription $SUBSCRIPTION
 
 # Create resource group
+
 az group create --name $RESOURCE_GROUP --location $REGION
 
 # Deploy infrastructure
+
 cd azure
 az deployment group create \
   --resource-group $RESOURCE_GROUP \
@@ -90,18 +104,22 @@ az deployment group create \
     functionAppName=badi-oerlikon-func \
     storageAccountName=badioerlikon \
     location=$REGION
-```
+
+```text
 
 ### 3. Deploy Function Code
 
 ```bash
+
 # Package function
+
 cd src/functions/websocket_listener
 mkdir -p build
-cp __init__.py websocket_handler.py function.json requirements.txt build/
+cp **init**.py websocket_handler.py function.json requirements.txt build/
 cd build && zip -r ../websocket-listener.zip . && cd ..
 
 # Deploy
+
 FUNCTION_APP="badi-oerlikon-func"
 az functionapp deployment source config-zip \
   --resource-group $RESOURCE_GROUP \
@@ -109,6 +127,7 @@ az functionapp deployment source config-zip \
   --src websocket-listener.zip
 
 # Set environment variables
+
 STORAGE_ACCOUNT="badioerlikon"
 CONN_STRING=$(az storage account show-connection-string \
   --name $STORAGE_ACCOUNT \
@@ -121,17 +140,21 @@ az functionapp config appsettings set \
   --settings \
     WEBSOCKET_URL="wss://badi-public.crowdmonitor.ch:9591/api" \
     TARGET_UID="SSD-7" \
-    AZURE_STORAGE_CONNECTION_STRING="$CONN_STRING"
-```
+    AZURE*STORAGE*CONNECTION*STRING="$CONN*STRING"
+
+```text
 
 ### 4. Verify
 
 ```bash
+
 # View logs (should see updates immediately)
+
 az functionapp log tail \
   --name $FUNCTION_APP \
   --resource-group $RESOURCE_GROUP
-```
+
+```text
 
 ---
 
@@ -161,18 +184,21 @@ az functionapp log tail \
     "median": 48
   }
 }
-```
+
+```text
 
 ### Storage Location
 
-```
+```text
+
 Blob Container: scraped-data/
 ├── 2026-02-17/
 │   ├── 10-00-to-10-05.json    ← 60 readings
 │   ├── 10-05-to-10-10.json    ← 60 readings
 │   ├── 10-10-to-10-15.json    ← 60 readings
 │   └── ... (288 files per day)
-```
+
+```text
 
 ---
 
@@ -190,7 +216,8 @@ Blob Container: scraped-data/
 
 ### Monthly Costs
 
-```
+```text
+
 App Service (B1):         $12.00
 Blob Storage:              $1.00
 Application Insights:      $0.50
@@ -203,13 +230,15 @@ Extra cost:               +$0.80/month
 Data improvement:         +71,900%
 
 ROI: Exceptional ✅
-```
+
+```text
 
 ---
 
 ## Architecture Diagram
 
-```
+```text
+
 Every 5 minutes:
 
 Scheduled Timer
@@ -237,7 +266,8 @@ Save to Azure Blob Storage
         └─ Compressed with archive tier
         ↓
 Wait for next 5-minute window
-```
+
+```text
 
 ---
 
@@ -259,13 +289,16 @@ Wait for next 5-minute window
 ## Monitoring Commands
 
 ```bash
+
 # View logs in real-time
+
 az functionapp log tail \
   --name badi-oerlikon-func \
   --resource-group badi-oerlikon-rg \
   --follow
 
 # Check invocations
+
 az monitor metrics list \
   --resource-group badi-oerlikon-rg \
   --resource-type "Microsoft.Web/sites" \
@@ -273,11 +306,13 @@ az monitor metrics list \
   --metric Invocations
 
 # List blob storage files
+
 az storage blob list \
   --container-name scraped-data \
   --account-name badioerlikon \
   --query "[].name" -o table
-```
+
+```text
 
 ---
 
@@ -307,13 +342,13 @@ az storage blob list \
 
 ## Support & Troubleshooting
 
-**See these files for detailed help:**
-- `DEPLOYMENT_GUIDE_WEBSOCKET.md` - Detailed deployment steps
-- `WEBSOCKET_BADI_IMPLEMENTATION.md` - Implementation details
+### See these files for detailed help
+- `DEPLOYMENT*GUIDE*WEBSOCKET.md` - Detailed deployment steps
+- `WEBSOCKET*BADI*IMPLEMENTATION.md` - Implementation details
 - `TIMEOUT_CONSIDERATIONS.md` - Timeout analysis
 - `PROJECT_STATUS.md` - Complete status checklist
 
-**Common Issues:**
+### Common Issues
 
 | Issue | Solution |
 |-------|----------|
@@ -326,19 +361,21 @@ az storage blob list \
 
 ## Key Files
 
-```
+```text
+
 Ready-to-deploy code:
-├── src/functions/websocket_listener/__init__.py
-├── src/functions/websocket_listener/websocket_handler.py
+├── src/functions/websocket_listener/**init**.py
+├── src/functions/websocket*listener/websocket*handler.py
 ├── src/functions/websocket_listener/function.json
 ├── src/functions/websocket_listener/requirements.txt
 └── src/functions/websocket_listener/local.settings.json
 
 Deployment:
-├── DEPLOYMENT_GUIDE_WEBSOCKET.md (THIS IS YOUR MAIN GUIDE)
+├── DEPLOYMENT*GUIDE*WEBSOCKET.md (THIS IS YOUR MAIN GUIDE)
 ├── azure/main.bicep
 └── .github/workflows/azure-deploy.yml
-```
+
+```text
 
 ---
 
@@ -366,7 +403,8 @@ Before deploying, verify you have:
 ✅ Python 3.9+:               python3 --version
 ✅ WebSocket access:           telnet badi-public.crowdmonitor.ch 9591
 ✅ Internet connectivity:       curl https://www.google.com
-```
+
+```text
 
 ---
 
@@ -376,6 +414,6 @@ All systems are configured and ready to deploy!
 
 **Start with:** Follow the "Quick Start (3 Steps)" section above.
 
-**Questions?** See `DEPLOYMENT_GUIDE_WEBSOCKET.md` for detailed instructions.
+**Questions?** See `DEPLOYMENT*GUIDE*WEBSOCKET.md` for detailed instructions.
 
 **Let's go!** 🎉

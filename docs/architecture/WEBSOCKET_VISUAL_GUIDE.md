@@ -2,16 +2,18 @@
 
 ## Current Architecture (Polling/Scraping)
 
-```
+```text
+
 Time:       10:00  11:00  12:00  13:00  14:00  15:00  16:00
              │      │      │      │      │      │      │
 Actual Pool  ├─┬─┬──┴─┬─┬──┴─┬─┬──┴─┬─┬──┴─┬─┬──┴─┬─┬─┐
 Occupancy    │ │ │    │ │    │ │    │ │    │ │    │ │ │ (~500 changes/day)
              └─┴─┴────┴─┴────┴─┴────┴─┴────┴─┴────┴─┴─┘
-               
+
 Scraped      ●      ●      ●      ●      ●      ●      ●
 Data         (24 samples/day - captures <1% of changes)
-```
+
+```text
 
 **Problem:** You're taking photos once per hour but the pool is updating every few seconds.
 
@@ -19,17 +21,19 @@ Data         (24 samples/day - captures <1% of changes)
 
 ## Proposed Architecture (WebSocket Listening)
 
-```
+```text
+
 Time:       10:00-10:05  10:05-10:10  10:10-10:15  10:15-10:20  ...
              │ FN │       │ FN │       │ FN │       │ FN │
              ├─┬─┬──┬─┬──┬┤├─┬─┬──┬─┬──┬┤├─┬─┬──┬─┬──┬┤├─┬─┬──┬─┬──┬┤
 Actual Pool  │ │ │  │ │  ││ │ │  │ │  ││ │ │  │ │  ││ │ │  │ │  ││
 Occupancy    └─┴─┴──┴─┴──┘└─┴─┴──┴─┴──┘└─┴─┴──┴─┴──┘└─┴─┴──┴─┴──┘
-               
+
 WebSocket    10 events   12 events   11 events   13 events
 Events       per window  per window  per window  per window
              (44+ events × 288/day = ~300+ events/day)
-```
+
+```text
 
 **Solution:** Each function listens for exactly 5 minutes, capturing all changes.
 
@@ -39,7 +43,8 @@ Events       per window  per window  per window  per window
 
 ### Current Approach
 
-```
+```text
+
 10:00:00  ✓ Azure Function starts (timer trigger)
 10:00:01  - Fetch HTML
 10:00:02  - Parse HTML
@@ -53,11 +58,13 @@ Between 10:00 and 11:00:
   - Website updates occupancy ~50 times
   - You capture: 1 snapshot (the one at 10:00)
   - Missed: 49 updates (98% miss rate)
-```
+
+```text
 
 ### Proposed Approach
 
-```
+```text
+
 10:00:00  ✓ Function 1 starts (timer trigger)
 10:00:01  - Connect to WebSocket
 10:00:02  [listening passively...]
@@ -83,7 +90,8 @@ Between 10:00 and 11:00:
   - Website updates occupancy ~50 times
   - You capture: 48 updates (96% capture rate)
   - Missed: 2 updates (between function cycles, acceptable)
-```
+
+```text
 
 ---
 
@@ -91,18 +99,21 @@ Between 10:00 and 11:00:
 
 ### Current Approach
 
-```
+```text
+
 Daily Costs:
   ├─ 24 function invocations × $0.20/1M = $0.000005
   ├─ 24 × 3 seconds = 72 seconds × $0.000016/second = $0.001
   └─ Storage: ~1 KB = negligible
-  
+
 Monthly: $0.15 → Can ignore
-```
+
+```text
 
 ### Proposed Approach
 
-```
+```text
+
 Daily Costs:
   ├─ 288 function invocations × $0.20/1M = $0.000058
   ├─ 288 × 300 seconds = 86,400 seconds BUT:
@@ -110,9 +121,10 @@ Daily Costs:
   │  └─ 50s × $0.000016/second = $0.0008
   ├─ Storage: ~40 KB/day = negligible
   └─ Total per day: $0.0009
-  
+
 Monthly: $0.0009 × 30 = $0.027 → ~$2.50
-```
+
+```text
 
 **Extra Cost:** ~$2.35/month for 100x better data ✅
 
@@ -129,9 +141,10 @@ Monthly: $0.0009 × 30 = $0.027 → ~$2.50
   "occupancy": 45,
   "source": "HTML_SCRAPE"
 }
-```
 
-**Problems:**
+```text
+
+### Problems
 - ❌ Only 24 data points per day
 - ❌ Misses all mid-hour changes
 - ❌ Can't see usage patterns
@@ -165,9 +178,10 @@ Monthly: $0.0009 × 30 = $0.027 → ~$2.50
     "trend": "stable"
   }
 }
-```
 
-**Advantages:**
+```text
+
+### Advantages
 - ✅ 288 data points per day
 - ✅ Captures every change
 - ✅ Rich statistics per window
@@ -197,7 +211,8 @@ Monthly: $0.0009 × 30 = $0.027 → ~$2.50
 
 ## Function Execution Timeline (5-minute window)
 
-```
+```text
+
 10:00:00  ┌─ Function trigger
           │
 10:00:01  │ WebSocket connect (overhead: 0.5s)
@@ -215,10 +230,11 @@ Monthly: $0.0009 × 30 = $0.027 → ~$2.50
 10:04:58  │ Aggregation (0.2s)
 10:04:59  │ Log statistics (0.1s)
 10:05:00  └─ Function end
-          
+
 CPU Time: ~1.3 seconds
 Wall Time: 5 minutes (but mostly async waiting)
-```
+
+```text
 
 **Result:** You only pay for ~1-2 seconds of actual CPU work, even though the function runs for 5 minutes.
 
@@ -228,7 +244,8 @@ Wall Time: 5 minutes (but mostly async waiting)
 
 ### Scenario 1: WebSocket Connection Drops (rare)
 
-```
+```text
+
 Option A: Retry immediately
   └─ Reconnect and continue listening
 
@@ -239,7 +256,8 @@ Option B: Exit and start fresh next cycle
 Option C: Exponential backoff + notification
   └─ Email alert to ops
   └─ Auto-retry up to 3 times
-```
+
+```text
 
 **Recommended:** Option C (with alert)
 
@@ -256,7 +274,8 @@ Option C: Exponential backoff + notification
 
 You could display:
 
-```
+```text
+
 Real-time:
   ├─ Current occupancy: 47 guests
   ├─ Last update: 2 min ago
@@ -269,7 +288,8 @@ Trends:
   ├─ Graph: Occupancy vs. day of week
   ├─ Graph: Peak hours (heatmap)
   └─ Graph: Forecast for next 2 hours
-```
+
+```text
 
 **Current approach:** Can't do any of this (only 24 points/day)
 **Proposed approach:** Can do all of this (300+ points/day)
@@ -281,11 +301,17 @@ Trends:
 | Step | Effort | Time |
 |------|--------|------|
 | 1. Get WebSocket details | None | 5 min |
+
 | 2. Implement listener | Medium | 1 hour |
+
 | 3. Deploy alongside current | Easy | 15 min |
+
 | 4. Monitor for 1 week | Passive | 1 week |
+
 | 5. Compare results | Easy | 30 min |
+
 | 6. Deprecate old approach | Easy | 15 min |
+
 | **Total** | **Medium** | **~1.5 hours code** |
 
 ---

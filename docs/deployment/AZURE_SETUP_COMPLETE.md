@@ -1,16 +1,16 @@
 # ✅ Azure Tools Installation Summary
 
-**Installation Date:** February 17, 2026  
+**Installation Date:** February 17, 2026
 **Status:** ✅ COMPLETE
 
 ---
 
 ## 🎉 Successfully Installed
 
-✅ **Azure CLI** (v2.0.81)  
-✅ **Node.js** (v18.20.8) via nvm  
-✅ **npm** (v10.8.2)  
-✅ **Azure Functions Core Tools** (v4.7.0)  
+✅ **Azure CLI** (v2.0.81)
+✅ **Node.js** (v18.20.8) via nvm
+✅ **npm** (v10.8.2)
+✅ **Azure Functions Core Tools** (v4.7.0)
 
 ---
 
@@ -20,7 +20,8 @@
 
 ```bash
 az login
-```
+
+```text
 
 A browser window will open. Log in with your Azure credentials.
 
@@ -28,13 +29,15 @@ A browser window will open. Log in with your Azure credentials.
 
 ```bash
 az account set --subscription cc569079-9e12-412d-8dfb-a5d60a028f75
-```
+
+```text
 
 ### 3. Verify Setup
 
 ```bash
 az account show
-```
+
+```text
 
 You should see your subscription details displayed.
 
@@ -42,7 +45,8 @@ You should see your subscription details displayed.
 
 ```bash
 func --version
-```
+
+```text
 
 Should display: `4.7.0`
 
@@ -51,14 +55,17 @@ Should display: `4.7.0`
 ## 📋 What's Installed
 
 ### Azure CLI
+
 - Command-line tool for managing Azure resources
 - Used for: deploying infrastructure, managing services
 
 ### Node.js & npm
+
 - JavaScript runtime and package manager
 - Required by: Azure Functions Core Tools
 
 ### Azure Functions Core Tools
+
 - Local development environment for Azure Functions
 - Used for: testing, debugging, and deploying functions
 
@@ -68,15 +75,17 @@ Should display: `4.7.0`
 
 You can now:
 
-1. **Deploy to Azure** - See DEPLOYMENT_GUIDE_WEBSOCKET.md
+1. **Deploy to Azure** - See DEPLOYMENT*GUIDE*WEBSOCKET.md
+
 2. **Test locally** - Run `func start` in src/functions/websocket_listener/
+
 3. **Manage infrastructure** - Use `az` commands
 
 ---
 
 ## 📚 Documentation
 
-See `AZURE_TOOLS_SETUP.md` for detailed commands and troubleshooting.
+See `AZURE*TOOLS*SETUP.md` for detailed commands and troubleshooting.
 
 ---
 
@@ -86,9 +95,10 @@ If `func` command not found in new terminal:
 
 ```bash
 export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+[ -s "$NVM*DIR/nvm.sh" ] && \. "$NVM*DIR/nvm.sh"
 func --version
-```
+
+```text
 
 Or close and reopen your terminal.
 

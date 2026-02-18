@@ -6,55 +6,89 @@ Your BADI Oerlikon Attendance Tracker has been completely transformed from a sim
 
 ## New Project Structure
 
-```
-badi_oerlikon_attendence/
+```text
+
+badi*oerlikon*attendence/
 ├── azure/                              # NEW: Azure Infrastructure
+
 │   ├── main.bicep                      # Infrastructure as Code
+
 │   ├── parameters.bicepparam           # Deployment parameters
+
 │   └── deploy.sh                       # Automated deployment script
+
 │
 ├── docker/                             # NEW: Container images
+
 │   ├── Dockerfile.webapp               # Flask web app container
+
 │   └── Dockerfile.crawler              # Crawler service container
+
 │
 ├── .github/workflows/                  # NEW: CI/CD automation
+
 │   └── azure-deploy.yml                # GitHub Actions deployment
+
 │
 ├── src/
 │   ├── api/                            # NEW: Flask REST API
+
 │   │   ├── app.py                      # API endpoints
+
 │   │   └── static/                     # NEW: Frontend UI
+
 │   │       ├── index.html              # Dashboard
+
 │   │       ├── style.css               # Styling
+
 │   │       └── app.js                  # Frontend logic
+
 │   │
 │   ├── azure_storage/                  # NEW: Azure integration
+
 │   │   ├── blob_adapter.py             # Low-level blob ops
+
 │   │   ├── repository.py               # Data persistence layer
-│   │   └── __init__.py
+
+│   │   └── **init**.py
 │   │
 │   ├── services/                       # NEW: Business logic
+
 │   │   ├── crawler_service.py          # Continuous crawler
-│   │   ├── __init__.py
+
+│   │   ├── **init**.py
 │   │   └── crawler_main.py             # Entry point
+
 │   │
 │   ├── scraper/                        # EXISTING: Web scraping
+
 │   ├── db/                             # Legacy: Not used in Azure
+
 │   ├── utils/                          # EXISTING: Utilities
+
 │   └── tests/                          # EXISTING: Tests
+
 │
 ├── docker-compose.yml                  # NEW: Local development
+
 ├── QUICKSTART.md                       # NEW: Quick start guide
+
 ├── AZURE_DEPLOYMENT.md                 # NEW: Detailed setup
+
 ├── ARCHITECTURE.md                     # NEW: System design
+
 ├── GITHUB_SECRETS.md                   # NEW: CI/CD configuration
+
 ├── requirements.txt                    # UPDATED: Azure SDKs added
+
 └── .env.example                        # UPDATED: Azure config
-```
+
+```text
 
 ## Key Components Created
 
 ### 1. Azure Infrastructure (Bicep)
+
 **Files**: `azure/main.bicep`, `azure/parameters.bicepparam`, `azure/deploy.sh`
 
 - Storage Account with blob containers
@@ -63,6 +97,7 @@ badi_oerlikon_attendence/
 - All resources configured with proper networking and security
 
 ### 2. Web Application (Flask + HTML/CSS/JS)
+
 **Files**: `src/api/app.py`, `src/api/static/*`
 
 - REST API endpoints for data retrieval
@@ -72,7 +107,8 @@ badi_oerlikon_attendence/
 - Auto-refresh capabilities
 
 ### 3. Azure Storage Integration
-**Files**: `src/azure_storage/blob_adapter.py`, `src/azure_storage/repository.py`
+
+**Files**: `src/azure*storage/blob*adapter.py`, `src/azure_storage/repository.py`
 
 - Blob storage client with connection pooling
 - Data persistence layer
@@ -80,7 +116,8 @@ badi_oerlikon_attendence/
 - JSON serialization
 
 ### 4. Continuous Crawler Service
-**Files**: `src/services/crawler_service.py`, `src/crawler_main.py`
+
+**Files**: `src/services/crawler*service.py`, `src/crawler*main.py`
 
 - Scheduled scraping at configurable intervals
 - Automatic error handling and retry logic
@@ -88,6 +125,7 @@ badi_oerlikon_attendence/
 - Comprehensive logging
 
 ### 5. Docker Containerization
+
 **Files**: `docker/Dockerfile.webapp`, `docker/Dockerfile.crawler`, `docker-compose.yml`
 
 - Production-ready container images
@@ -96,6 +134,7 @@ badi_oerlikon_attendence/
 - Multi-container orchestration
 
 ### 6. CI/CD Automation
+
 **Files**: `.github/workflows/azure-deploy.yml`
 
 - Automated build on push
@@ -104,6 +143,7 @@ badi_oerlikon_attendence/
 - Testing and linting
 
 ### 7. Documentation
+
 - **QUICKSTART.md**: 5-minute setup guide
 - **AZURE_DEPLOYMENT.md**: Comprehensive deployment guide
 - **ARCHITECTURE.md**: System design and components
@@ -112,16 +152,21 @@ badi_oerlikon_attendence/
 ## Technology Changes
 
 ### Before (Local)
-```
+
+```text
+
 Python script
     ↓
 SQLAlchemy + SQLite
     ↓
 Local database
-```
+
+```text
 
 ### After (Azure Cloud)
-```
+
+```text
+
 Python Flask REST API
     ↓
 Azure Storage Blob
@@ -132,11 +177,13 @@ JSON files (auto-versioned)
 + Web dashboard
 + CI/CD automation
 + Docker containerization
-```
+
+```text
 
 ## Deployment Architecture
 
-```
+```text
+
 GitHub Repository
         ↓ (push to main)
 GitHub Actions
@@ -151,31 +198,42 @@ Azure Container Registry
 Azure Storage (Blob)
     ├→ Stores: scraped_data/*.json
     └→ Stores: logs/*.log
-```
+
+```text
 
 ## How to Use
 
 ### 1. Local Development
+
 ```bash
 docker-compose up
+
 # Access at http://localhost:5000
-```
+
+```text
 
 ### 2. Deploy to Azure
+
 ```bash
 cd azure
 chmod +x deploy.sh
 ./deploy.sh
-```
+
+```text
 
 ### 3. Monitor
+
 ```bash
+
 # Check logs
+
 az webapp log tail --resource-group your-rg --name your-app
 
 # View crawler status
+
 az container logs --resource-group your-rg --name badi-crawler
-```
+
+```text
 
 ## Key Features
 
@@ -233,16 +291,23 @@ az container logs --resource-group your-rg --name badi-crawler
 ## Next Steps
 
 1. **Configure GitHub Secrets** (see `GITHUB_SECRETS.md`)
+
 2. **Deploy to Azure** (see `QUICKSTART.md`)
+
 3. **Set up monitoring** with Application Insights
+
 4. **Configure alerts** for crawler failures
+
 5. **Implement auto-scaling** for peak traffic
 
 ## Files to Review First
 
 1. **QUICKSTART.md** - Start here for quick setup
+
 2. **AZURE_DEPLOYMENT.md** - Full deployment guide
+
 3. **ARCHITECTURE.md** - Understand the design
+
 4. **GITHUB_SECRETS.md** - Set up CI/CD
 
 ## Comparison: Before vs After

@@ -5,7 +5,9 @@ To enable automatic deployment via GitHub Actions, configure the following secre
 ## Step 1: Access Repository Secrets
 
 1. Go to your repository on GitHub
+
 2. Navigate to **Settings** > **Secrets and variables** > **Actions**
+
 3. Click **New repository secret**
 
 ## Step 2: Azure Credentials
@@ -13,18 +15,23 @@ To enable automatic deployment via GitHub Actions, configure the following secre
 ### Get Azure Credentials
 
 ```bash
+
 # Login to Azure
+
 az login
 
 # Get subscription ID
+
 SUBSCRIPTION_ID=$(az account show --query id -o tsv)
 
 # Create service principal
+
 az ad sp create-for-rbac --name "GitHub-Actions" \
   --role Contributor \
   --scopes /subscriptions/$SUBSCRIPTION_ID \
   --sdk-auth
-```
+
+```text
 
 This will output JSON like:
 
@@ -41,7 +48,8 @@ This will output JSON like:
   "galleryEndpointUrl": "https://gallery.azure.com/",
   "managementEndpointUrl": "https://management.core.windows.net/"
 }
-```
+
+```text
 
 ### Add Secret
 
@@ -52,43 +60,51 @@ Create a new secret called **AZURE_CREDENTIALS** and paste the entire JSON outpu
 Get these values from your Azure deployment:
 
 ```bash
+
 # Set resource group
-RESOURCE_GROUP_NAME="badi-oerlikon-rg"
+
+RESOURCE*GROUP*NAME="badi-oerlikon-rg"
 
 # Get storage account name
-STORAGE_ACCOUNT_NAME=$(az deployment group show \
-  --resource-group $RESOURCE_GROUP_NAME \
+
+STORAGE*ACCOUNT*NAME=$(az deployment group show \
+  --resource-group $RESOURCE*GROUP*NAME \
   --name main \
   --query properties.outputs.storageAccountName.value -o tsv)
 
 # Get storage connection string
-AZURE_STORAGE_CONNECTION_STRING=$(az storage account show-connection-string \
-  --name $STORAGE_ACCOUNT_NAME \
-  --resource-group $RESOURCE_GROUP_NAME -o tsv)
+
+AZURE*STORAGE*CONNECTION_STRING=$(az storage account show-connection-string \
+  --name $STORAGE*ACCOUNT*NAME \
+  --resource-group $RESOURCE*GROUP*NAME -o tsv)
 
 # Get container registry info
-REGISTRY_LOGIN_SERVER=$(az deployment group show \
-  --resource-group $RESOURCE_GROUP_NAME \
+
+REGISTRY*LOGIN*SERVER=$(az deployment group show \
+  --resource-group $RESOURCE*GROUP*NAME \
   --name main \
   --query properties.outputs.containerRegistryLoginServer.value -o tsv)
 
 # Get registry credentials
+
 REGISTRY_USERNAME=$(az acr credential show \
-  --name $(echo $REGISTRY_LOGIN_SERVER | cut -d'.' -f1) \
+  --name $(echo $REGISTRY*LOGIN*SERVER | cut -d'.' -f1) \
   --query username -o tsv)
 
 REGISTRY_PASSWORD=$(az acr credential show \
-  --name $(echo $REGISTRY_LOGIN_SERVER | cut -d'.' -f1) \
+  --name $(echo $REGISTRY*LOGIN*SERVER | cut -d'.' -f1) \
   --query passwords[0].value -o tsv)
 
 # Print for copying
-echo "RESOURCE_GROUP_NAME=$RESOURCE_GROUP_NAME"
-echo "STORAGE_ACCOUNT_NAME=$STORAGE_ACCOUNT_NAME"
-echo "AZURE_STORAGE_CONNECTION_STRING=$AZURE_STORAGE_CONNECTION_STRING"
-echo "REGISTRY_LOGIN_SERVER=$REGISTRY_LOGIN_SERVER"
-echo "REGISTRY_USERNAME=$REGISTRY_USERNAME"
-echo "REGISTRY_PASSWORD=$REGISTRY_PASSWORD"
-```
+
+echo "RESOURCE*GROUP*NAME=$RESOURCE*GROUP*NAME"
+echo "STORAGE*ACCOUNT*NAME=$STORAGE*ACCOUNT*NAME"
+echo "AZURE*STORAGE*CONNECTION*STRING=$AZURE*STORAGE*CONNECTION*STRING"
+echo "REGISTRY*LOGIN*SERVER=$REGISTRY*LOGIN*SERVER"
+echo "REGISTRY*USERNAME=$REGISTRY*USERNAME"
+echo "REGISTRY*PASSWORD=$REGISTRY*PASSWORD"
+
+```text
 
 ### Add Secrets
 
@@ -96,27 +112,32 @@ Create the following secrets in GitHub:
 
 | Secret Name | Value |
 | --- | --- |
-| `RESOURCE_GROUP_NAME` | Your resource group name (e.g., `badi-oerlikon-rg`) |
-| `REGISTRY_LOGIN_SERVER` | Container registry URL |
+| `RESOURCE*GROUP*NAME` | Your resource group name (e.g., `badi-oerlikon-rg`) |
+| `REGISTRY*LOGIN*SERVER` | Container registry URL |
 | `REGISTRY_USERNAME` | Container registry username |
 | `REGISTRY_PASSWORD` | Container registry password |
-| `AZURE_STORAGE_CONNECTION_STRING` | Full storage connection string |
-| `WEB_APP_NAME` | Your App Service name (e.g., `badi-oerlikon-dev-app`) |
-| `CRAWLER_CONTAINER_NAME` | Crawler container name (e.g., `badi-crawler`) |
+| `AZURE*STORAGE*CONNECTION_STRING` | Full storage connection string |
+| `WEB*APP*NAME` | Your App Service name (e.g., `badi-oerlikon-dev-app`) |
+| `CRAWLER*CONTAINER*NAME` | Crawler container name (e.g., `badi-crawler`) |
 
 ## Step 4: Verify Secrets
 
 List configured secrets (names only):
 
 ```bash
+
 # In GitHub UI, go to Settings > Secrets and you should see all secrets listed
-```
+
+```text
 
 ## Step 5: Test Deployment
 
 1. Make a commit and push to main branch
+
 2. Go to **Actions** tab in GitHub
+
 3. Watch the **Build and Deploy to Azure** workflow
+
 4. Check logs for any errors
 
 ## Troubleshooting
@@ -126,29 +147,34 @@ List configured secrets (names only):
 The service principal needs push access to the container registry:
 
 ```bash
-REGISTRY_NAME=$(echo $REGISTRY_LOGIN_SERVER | cut -d'.' -f1)
-SERVICE_PRINCIPAL_ID=$(az ad sp show --id <your-client-id> --query id -o tsv)
+REGISTRY*NAME=$(echo $REGISTRY*LOGIN_SERVER | cut -d'.' -f1)
+SERVICE*PRINCIPAL*ID=$(az ad sp show --id <your-client-id> --query id -o tsv)
 
 az role assignment create \
-  --assignee $SERVICE_PRINCIPAL_ID \
+  --assignee $SERVICE*PRINCIPAL*ID \
   --role AcrPush \
-  --scope /subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RESOURCE_GROUP_NAME/providers/Microsoft.ContainerRegistry/registries/$REGISTRY_NAME
-```
+  --scope /subscriptions/$SUBSCRIPTION*ID/resourceGroups/$RESOURCE*GROUP*NAME/providers/Microsoft.ContainerRegistry/registries/$REGISTRY*NAME
+
+```text
 
 ### "Authentication failed" error
 
 Recreate the service principal:
 
 ```bash
+
 # Delete old one
+
 az ad sp delete --id <old-client-id>
 
 # Create new one
+
 az ad sp create-for-rbac --name "GitHub-Actions" \
   --role Contributor \
   --scopes /subscriptions/$SUBSCRIPTION_ID \
   --sdk-auth
-```
+
+```text
 
 Then update the **AZURE_CREDENTIALS** secret.
 
@@ -157,23 +183,33 @@ Then update the **AZURE_CREDENTIALS** secret.
 Verify the resource names match exactly:
 
 ```bash
+
 # List web apps
-az webapp list --resource-group $RESOURCE_GROUP_NAME --query "[].name"
+
+az webapp list --resource-group $RESOURCE*GROUP*NAME --query "[].name"
 
 # List containers
-az container list --resource-group $RESOURCE_GROUP_NAME --query "[].name"
+
+az container list --resource-group $RESOURCE*GROUP*NAME --query "[].name"
 
 # List registries
-az acr list --resource-group $RESOURCE_GROUP_NAME --query "[].loginServer"
-```
+
+az acr list --resource-group $RESOURCE*GROUP*NAME --query "[].loginServer"
+
+```text
 
 ## Security Best Practices
 
 1. **Rotate secrets regularly** (every 90 days)
+
 2. **Use service principals** instead of personal accounts
+
 3. **Limit role scope** to specific resources when possible
+
 4. **Monitor secret access** in Azure Activity Log
+
 5. **Use Azure Key Vault** for sensitive data in production
+
 6. **Never commit secrets** to version control
 
 ## Rotating Secrets
@@ -181,14 +217,18 @@ az acr list --resource-group $RESOURCE_GROUP_NAME --query "[].loginServer"
 To rotate secrets:
 
 ```bash
+
 # Get service principal object ID
+
 OBJECT_ID=$(az ad sp show --id <your-client-id> --query id -o tsv)
 
 # Create new credentials
+
 az ad sp credential reset --name "GitHub-Actions" --credential-description "GitHub-Actions-$(date +%s)"
 
 # Update GitHub secrets with new credentials
-```
+
+```text
 
 ## Additional Resources
 

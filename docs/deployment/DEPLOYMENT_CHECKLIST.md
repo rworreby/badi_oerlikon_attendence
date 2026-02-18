@@ -14,12 +14,14 @@ Use this checklist to ensure you've completed all necessary steps for deploying 
 ## Azure Setup Checklist
 
 ### 1. Azure Account
+
 - [ ] Azure subscription ID known
 - [ ] Resource group naming decided (e.g., `badi-oerlikon-rg`)
 - [ ] Azure region selected (e.g., `eastus`)
 - [ ] Logged in to Azure CLI (`az login`)
 
 ### 2. Infrastructure Deployment
+
 - [ ] Bicep files reviewed (`azure/main.bicep`)
 - [ ] Parameters configured (`azure/parameters.bicepparam`)
 - [ ] Deploy script executable (`chmod +x azure/deploy.sh`)
@@ -31,6 +33,7 @@ Use this checklist to ensure you've completed all necessary steps for deploying 
 - [ ] Container Registry created
 
 ### 3. Storage Configuration
+
 - [ ] Storage account connection string obtained
 - [ ] Connection string tested
 - [ ] `scraped-data` container created
@@ -40,12 +43,14 @@ Use this checklist to ensure you've completed all necessary steps for deploying 
 ## Docker Setup Checklist
 
 ### 1. Local Development
+
 - [ ] Docker Compose file reviewed (`docker-compose.yml`)
 - [ ] Local images built (`docker build`)
 - [ ] Azurite container works (`docker-compose up azurite`)
 - [ ] Local development tested
 
 ### 2. Docker Images
+
 - [ ] Web app Dockerfile reviewed (`docker/Dockerfile.webapp`)
 - [ ] Crawler Dockerfile reviewed (`docker/Dockerfile.crawler`)
 - [ ] Images build successfully
@@ -54,22 +59,25 @@ Use this checklist to ensure you've completed all necessary steps for deploying 
 ## GitHub Setup Checklist
 
 ### 1. Repository Configuration
+
 - [ ] Repository cloned locally
 - [ ] Remote URL verified (`git remote -v`)
 - [ ] Branch structure set (main as default)
 - [ ] `.gitignore` configured
 
 ### 2. GitHub Secrets (See GITHUB_SECRETS.md)
+
 - [ ] `AZURE_CREDENTIALS` secret configured
-- [ ] `RESOURCE_GROUP_NAME` secret configured
-- [ ] `REGISTRY_LOGIN_SERVER` secret configured
+- [ ] `RESOURCE*GROUP*NAME` secret configured
+- [ ] `REGISTRY*LOGIN*SERVER` secret configured
 - [ ] `REGISTRY_USERNAME` secret configured
 - [ ] `REGISTRY_PASSWORD` secret configured
-- [ ] `AZURE_STORAGE_CONNECTION_STRING` secret configured
-- [ ] `WEB_APP_NAME` secret configured
-- [ ] `CRAWLER_CONTAINER_NAME` secret configured
+- [ ] `AZURE*STORAGE*CONNECTION_STRING` secret configured
+- [ ] `WEB*APP*NAME` secret configured
+- [ ] `CRAWLER*CONTAINER*NAME` secret configured
 
 ### 3. GitHub Actions
+
 - [ ] Workflow file exists (`.github/workflows/azure-deploy.yml`)
 - [ ] Workflow permissions configured (Settings > Actions)
 - [ ] Secrets accessible to workflow
@@ -78,11 +86,13 @@ Use this checklist to ensure you've completed all necessary steps for deploying 
 ## Container Registry Setup Checklist
 
 ### 1. Authentication
+
 - [ ] Logged in to Container Registry (`az acr login`)
 - [ ] Credentials stored securely
 - [ ] Service principal created for GitHub Actions
 
 ### 2. Images
+
 - [ ] Web app image built (`badi-webapp:latest`)
 - [ ] Crawler image built (`badi-crawler:latest`)
 - [ ] Images pushed to registry
@@ -91,9 +101,10 @@ Use this checklist to ensure you've completed all necessary steps for deploying 
 ## Application Configuration Checklist
 
 ### 1. Web App Settings
+
 - [ ] App settings configured:
-  - [ ] `AZURE_STORAGE_CONNECTION_STRING`
-  - [ ] `BLOB_CONTAINER_NAME`
+  - [ ] `AZURE*STORAGE*CONNECTION_STRING`
+  - [ ] `BLOB*CONTAINER*NAME`
   - [ ] `FLASK_ENV=production`
   - [ ] `PORT=8000`
 - [ ] Container configuration set
@@ -101,16 +112,18 @@ Use this checklist to ensure you've completed all necessary steps for deploying 
 - [ ] Health checks enabled
 
 ### 2. Crawler Configuration
+
 - [ ] Container instance created
 - [ ] Environment variables set:
-  - [ ] `AZURE_STORAGE_CONNECTION_STRING`
-  - [ ] `BLOB_CONTAINER_NAME`
-  - [ ] `SCRAPE_INTERVAL_SECONDS`
+  - [ ] `AZURE*STORAGE*CONNECTION_STRING`
+  - [ ] `BLOB*CONTAINER*NAME`
+  - [ ] `SCRAPE*INTERVAL*SECONDS`
   - [ ] `LOG_LEVEL`
 - [ ] Restart policy set to `Always`
 - [ ] Resource limits set
 
 ### 3. Environment Variables
+
 - [ ] `.env.example` reviewed
 - [ ] `.env` created locally (NOT committed)
 - [ ] All required variables present
@@ -119,6 +132,7 @@ Use this checklist to ensure you've completed all necessary steps for deploying 
 ## Testing Checklist
 
 ### 1. Local Testing
+
 - [ ] Web app runs locally
 - [ ] API endpoints respond
 - [ ] Frontend loads
@@ -127,6 +141,7 @@ Use this checklist to ensure you've completed all necessary steps for deploying 
 - [ ] Logs appear
 
 ### 2. Azure Testing
+
 - [ ] Web app responds at Azure URL
 - [ ] Health check passes (`/health`)
 - [ ] Latest data endpoint works (`/api/data/latest`)
@@ -135,6 +150,7 @@ Use this checklist to ensure you've completed all necessary steps for deploying 
 - [ ] Auto-refresh works
 
 ### 3. Crawler Testing
+
 - [ ] Crawler container runs
 - [ ] Crawler logs appear
 - [ ] Data appears in blob storage
@@ -144,6 +160,7 @@ Use this checklist to ensure you've completed all necessary steps for deploying 
 ## Deployment Checklist
 
 ### 1. First Deployment
+
 - [ ] All components tested
 - [ ] Bicep validated (`az bicep validate`)
 - [ ] Infrastructure deployed
@@ -152,6 +169,7 @@ Use this checklist to ensure you've completed all necessary steps for deploying 
 - [ ] Crawler deployed
 
 ### 2. Continuous Deployment
+
 - [ ] GitHub Actions workflow runs
 - [ ] Builds complete successfully
 - [ ] Tests pass (if configured)
@@ -160,6 +178,7 @@ Use this checklist to ensure you've completed all necessary steps for deploying 
 - [ ] Deployment visible within 5 minutes
 
 ### 3. Rollback Procedure
+
 - [ ] Previous image version available
 - [ ] Rollback command documented
 - [ ] Database backups available
@@ -168,18 +187,21 @@ Use this checklist to ensure you've completed all necessary steps for deploying 
 ## Monitoring Checklist
 
 ### 1. Logging
+
 - [ ] Application Insights configured (optional)
 - [ ] App logs available (`az webapp log tail`)
 - [ ] Crawler logs available (`az container logs`)
 - [ ] Log retention policies set
 
 ### 2. Alerts
+
 - [ ] Alert rule created for high error rate
 - [ ] Alert rule created for crawler failure
 - [ ] Alert rule created for storage quota
 - [ ] Notification email configured
 
 ### 3. Metrics
+
 - [ ] Response time monitored
 - [ ] Error rate monitored
 - [ ] Storage usage monitored
@@ -228,16 +250,19 @@ Use this checklist to ensure you've completed all necessary steps for deploying 
 ## Maintenance Checklist
 
 ### Daily
+
 - [ ] Check alerts
 - [ ] Verify data is being updated
 - [ ] Monitor error logs
 
 ### Weekly
+
 - [ ] Review metrics
 - [ ] Check storage usage
 - [ ] Test manual processes
 
 ### Monthly
+
 - [ ] Review costs
 - [ ] Update dependencies
 - [ ] Audit access
@@ -268,11 +293,11 @@ Use this checklist to ensure you've completed all necessary steps for deploying 
 ## Notes
 
 Use this section to document:
-- Deployment date: _______________
-- Deployed by: _______________
-- Issues encountered: _______________
-- Resolution steps taken: _______________
-- Next steps: _______________
+- Deployment date: _____________**
+- Deployed by: **___________**
+- Issues encountered: **___________**
+- Resolution steps taken: **___________**
+- Next steps: **_____________
 
 ---
 

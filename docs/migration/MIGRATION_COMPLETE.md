@@ -7,12 +7,14 @@ Your project has been successfully migrated from **Azure Container Instance** to
 ## ✅ What Was Accomplished
 
 ### 1. Converted to Azure Functions
+
 - ✅ Updated Bicep infrastructure to use Consumption plan Functions
 - ✅ Created Python function handler with timer trigger
 - ✅ Configured function to run hourly (schedule: `0 0 * * * *`)
 - ✅ Created local.settings.json for local testing
 
 ### 2. Removed Outdated Files (18 total)
+
 - ✅ Removed `docker/Dockerfile.crawler`
 - ✅ Removed `src/db/` directory (SQLAlchemy models)
 - ✅ Removed `src/migrations/` directory (Alembic)
@@ -26,13 +28,15 @@ Your project has been successfully migrated from **Azure Container Instance** to
 - ✅ Cleaned up temporary files
 
 ### 3. Updated Infrastructure
+
 - ✅ Bicep: Added Function App resources
 - ✅ Bicep: Removed Container Registry (Functions don't need it)
 - ✅ GitHub Actions: Removed container build steps
 - ✅ requirements.txt: Removed SQLAlchemy, Alembic; added azure-functions
 
 ### 4. Created New Files (6 total)
-- ✅ `src/functions/crawler_timer/__init__.py` - Function handler
+
+- ✅ `src/functions/crawler_timer/**init**.py` - Function handler
 - ✅ `src/functions/crawler_timer/function.json` - Timer configuration
 - ✅ `src/functions/requirements.txt` - Function dependencies
 - ✅ `src/functions/local.settings.json` - Local dev config
@@ -40,15 +44,18 @@ Your project has been successfully migrated from **Azure Container Instance** to
 - ✅ Documentation guides (3 new guides)
 
 ### 5. Comprehensive Documentation
-- ✅ AZURE_FUNCTIONS_GUIDE.md - Complete setup instructions
-- ✅ MIGRATION_CONTAINER_TO_FUNCTIONS.md - Migration details
+
+- ✅ AZURE*FUNCTIONS*GUIDE.md - Complete setup instructions
+- ✅ MIGRATION*CONTAINER*TO_FUNCTIONS.md - Migration details
 - ✅ CLEANUP_SUMMARY.md - Summary of all changes
 - ✅ Updated GITHUB_SECRETS.md with Function App secrets
 
 ## 📊 Impact Summary
 
 ### Cost Reduction
-```
+
+```text
+
 Before: ~$113/month
   - Web App (B1):        $12
   - Blob Storage:        $1
@@ -60,35 +67,47 @@ After: ~$14-18/month
   - Function App:        $1-5
 
 Savings: ~$95-98/month (85% reduction)
-```
+
+```text
 
 ### Code Reduction
-```
+
+```text
+
 Removed:  ~1,500 lines (db, migrations, crawler service)
 Added:    ~400 lines (function handler, config)
 Net:      ~1,100 lines removed
-```
+
+```text
 
 ### Simplification
-```
+
+```text
+
 ❌ Complex: Container management, image builds, manual updates
 ✅ Simple: Automatic function deployment, timer-based execution
-```
+
+```text
 
 ## 🚀 Next Steps
 
 ### 1. Test Locally
+
 ```bash
 docker-compose -f docker-compose.functions.yml up
-```
+
+```text
 
 ### 2. Deploy Infrastructure
+
 ```bash
 cd azure
 ./deploy.sh
-```
+
+```text
 
 ### 3. Deploy Function Code
+
 ```bash
 cd src/functions
 mkdir -p build
@@ -100,57 +119,65 @@ az functionapp deployment source config-zip \
   --resource-group badi-oerlikon-rg \
   --name badi-oerlikon-dev-func \
   --src function-app.zip
-```
+
+```text
 
 ### 4. Verify
+
 ```bash
+
 # Check function logs
+
 az functionapp log tail \
   --resource-group badi-oerlikon-rg \
   --name badi-oerlikon-dev-func
 
 # Check data in blob storage
+
 az storage blob list \
   --container-name scraped-data \
   --account-name <storage-account>
-```
+
+```text
 
 ## 📁 Project Structure (After Cleanup)
 
-```
+```text
+
 src/
 ├── api/                          ✅ Web app (unchanged)
 │   ├── app.py
-│   ├── __init__.py
+│   ├── **init**.py
 │   └── static/
 ├── azure_storage/                ✅ Blob storage client (unchanged)
 │   ├── blob_adapter.py
 │   ├── repository.py
-│   └── __init__.py
+│   └── **init**.py
 ├── functions/                    ✅ NEW: Azure Functions
 │   ├── crawler_timer/
-│   │   ├── __init__.py          (Function handler)
+│   │   ├── **init**.py          (Function handler)
 │   │   └── function.json        (Timer config)
 │   ├── requirements.txt
 │   └── local.settings.json
 ├── scraper/                      ✅ Web scraper (unchanged)
 │   ├── fetcher.py
 │   ├── parser.py
-│   └── __init__.py
-├── services/                     ⚠️  Only __init__.py remains
+│   └── **init**.py
+├── services/                     ⚠️  Only **init**.py remains
 ├── utils/                        ✅ Logger (unchanged)
 │   ├── logger.py
-│   └── __init__.py
+│   └── **init**.py
 └── tests/
     └── test_scraper.py          ✅ DB tests removed
-```
+
+```text
 
 ## 📖 Documentation
 
 | Document | Purpose |
 |----------|---------|
-| AZURE_FUNCTIONS_GUIDE.md | Step-by-step setup guide |
-| MIGRATION_CONTAINER_TO_FUNCTIONS.md | Why and how of migration |
+| AZURE*FUNCTIONS*GUIDE.md | Step-by-step setup guide |
+| MIGRATION*CONTAINER*TO_FUNCTIONS.md | Why and how of migration |
 | CLEANUP_SUMMARY.md | Detailed cleanup information |
 | QUICKSTART.md | Fast setup guide |
 | AZURE_DEPLOYMENT.md | General deployment guide |
@@ -159,7 +186,9 @@ src/
 ## 🔄 What Changed in the Workflow
 
 ### Before (Container Instance)
-```
+
+```text
+
 Code Push
   ↓
 Build Crawler Docker Image
@@ -173,10 +202,13 @@ Update/recreate Container Instance
 Update Web App
   ↓
 Both running 24/7
-```
+
+```text
 
 ### After (Azure Functions)
-```
+
+```text
+
 Code Push
   ↓
 Build Web App Docker Image only
@@ -190,13 +222,15 @@ Update Web App
 Deploy function code
   ↓
 Function runs on schedule only
-```
+
+```text
 
 ## ⚡ Function Schedule
 
 The crawler runs every hour at the start of the hour:
 
-```
+```text
+
 Cron: 0 0 * * * *
       │ │ │ │ │ │
       │ │ │ │ │ Day of week (0-6)
@@ -205,7 +239,8 @@ Cron: 0 0 * * * *
       │ │ Hour (0-23)
       │ Minute (0-59)
       Second (0-59)
-```
+
+```text
 
 **To change schedule**, edit `src/functions/crawler_timer/function.json`:
 
@@ -213,7 +248,8 @@ Cron: 0 0 * * * *
 "schedule": "0 */6 * * * *"  // Every 6 hours
 "schedule": "0 30 * * * *"   // Every hour at 30 minutes past
 "schedule": "0 0 0 * * *"    // Once per day at midnight
-```
+
+```text
 
 ## ✨ Benefits of Azure Functions
 
@@ -229,52 +265,66 @@ Cron: 0 0 * * * *
 ## 🆘 Common Tasks
 
 ### Monitor Executions
+
 ```bash
 az functionapp log tail --resource-group rg --name func-name
-```
+
+```text
 
 ### Manually Trigger Function
+
 ```bash
 FUNC_KEY=$(az functionapp keys list --resource-group rg --name func-name --query "functionKeys.default" -o tsv)
-curl -X POST https://func-name.azurewebsites.net/admin/functions/crawler_timer -H "x-functions-key: $FUNC_KEY"
-```
+curl -X POST https://func-name.azurewebsites.net/admin/functions/crawler*timer -H "x-functions-key: $FUNC*KEY"
+
+```text
 
 ### Change Schedule
+
 1. Edit `src/functions/crawler_timer/function.json`
+
 2. Redeploy function code (see Step 3 above)
 
 ### Verify Data Collection
+
 ```bash
 az storage blob list --container-name scraped-data --account-name storage-name
-```
+
+```text
 
 ## 📋 Files Removed
 
 ### Database Layer
+
 - ❌ src/db/models.py
 - ❌ src/db/repository.py
 - ❌ src/db/session.py
-- ❌ src/db/__init__.py
+- ❌ src/db/**init**.py
 - ❌ src/migrations/env.py
 - ❌ alembic.ini
 
 ### Services
+
 - ❌ src/services/crawler_service.py
 - ❌ src/crawler_main.py
 
 ### Docker
+
 - ❌ docker/Dockerfile.crawler
 - ❌ docker-compose.yml
 
 ### Scripts
+
 - ❌ scripts/populate_db.py
-- ❌ scripts/scrape_ws_test.py
-- ❌ scripts/websocket_listener_oerlikon.py
+- ❌ scripts/scrape*ws*test.py
+- ❌ scripts/websocket*listener*oerlikon.py
 
 ### Tests
+
 - ❌ src/tests/test_db.py
 
 ### Experimental
+
 - ❌ clean_code/
 - ❌ live-csv-plot/
 - ❌ temp.py
@@ -283,35 +333,38 @@ az storage blob list --container-name scraped-data --account-name storage-name
 ## ✅ Files Added
 
 ### Function Code
-- ✅ src/functions/crawler_timer/__init__.py
+
+- ✅ src/functions/crawler_timer/**init**.py
 - ✅ src/functions/crawler_timer/function.json
 - ✅ src/functions/requirements.txt
 - ✅ src/functions/local.settings.json
 
 ### Docker
+
 - ✅ docker-compose.functions.yml
 
 ### Documentation
-- ✅ AZURE_FUNCTIONS_GUIDE.md
-- ✅ MIGRATION_CONTAINER_TO_FUNCTIONS.md
+
+- ✅ AZURE*FUNCTIONS*GUIDE.md
+- ✅ MIGRATION*CONTAINER*TO_FUNCTIONS.md
 - ✅ CLEANUP_SUMMARY.md
 
 ## 🔧 Dependencies Updated
 
-**Removed:**
+### Removed
 - ❌ SQLAlchemy==1.4.22 (ORM, no longer needed)
 - ❌ alembic==1.7.5 (Migrations, no longer needed)
 
-**Added:**
+### Added
 - ✅ azure-functions==1.13.0 (Function runtime)
 
-**Kept:**
+### Kept
 - ✅ Flask, requests, beautifulsoup4, azure-storage-blob, etc.
 
 ## 📞 Support
 
-**For deployment issues**, see: `AZURE_FUNCTIONS_GUIDE.md`
-**For migration details**, see: `MIGRATION_CONTAINER_TO_FUNCTIONS.md`
+**For deployment issues**, see: `AZURE*FUNCTIONS*GUIDE.md`
+**For migration details**, see: `MIGRATION*CONTAINER*TO_FUNCTIONS.md`
 **For cleanup information**, see: `CLEANUP_SUMMARY.md`
 
 ## 🎯 Verification Checklist
@@ -335,6 +388,6 @@ az storage blob list --container-name scraped-data --account-name storage-name
 **Code Reduction**: ~1,100 lines
 **Complexity**: Significantly reduced ✅
 
-## 🚀 Ready to Deploy!
+## 🚀 Ready to Deploy
 
 All changes are complete and documented. Follow the **Next Steps** above to get your system running with Azure Functions.

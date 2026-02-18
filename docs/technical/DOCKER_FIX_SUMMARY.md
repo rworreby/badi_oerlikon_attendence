@@ -8,13 +8,16 @@
 
 ## What Was Wrong
 
-**Error:**
-```
-ERROR: Version in "./docker-compose.functions.yml" is unsupported. 
-You might be seeing this error because you're using the wrong Compose file version.
-```
+### Error
 
-**Root Cause:**
+```text
+
+ERROR: Version in "./docker-compose.functions.yml" is unsupported.
+You might be seeing this error because you're using the wrong Compose file version.
+
+```text
+
+### Root Cause
 - Version 3.8 with healthcheck conditions not supported on your system
 - Environment variables format using array syntax (`-KEY=value`) caused issues
 - Dependency condition syntax incompatible
@@ -47,7 +50,8 @@ You might be seeing this error because you're using the wrong Compose file versi
 
 ```bash
 docker-compose -f docker-compose.functions.yml up
-```
+
+```text
 
 **This should now work without errors!**
 
@@ -56,21 +60,29 @@ docker-compose -f docker-compose.functions.yml up
 ## What Happens Next
 
 ### Terminal 1: Docker & Azurite
-```
+
+```text
+
 azurite_1    | Azurite Blob service listening at http://0.0.0.0:10000
-```
+
+```text
 
 ### Terminal 2: Functions Runtime
+
 ```bash
 cd src/functions/websocket_listener
 func start
-```
+
+```text
 
 Expected output:
-```
+
+```text
+
 Now listening on: 127.0.0.1:7071
 websocket_listener: [TimerTrigger] (Disabled - runs on schedule)
-```
+
+```text
 
 ### Terminal 3: Monitor Logs
 
@@ -79,31 +91,38 @@ Function will either:
 - Run on the 5-minute timer schedule
 
 You should see:
-```
+
+```text
+
 Connected to WebSocket: wss://badi-public.crowdmonitor.ch:9591/api
 Sent 'all' command to WebSocket
 Update 1: occupancy=45
 Update 2: occupancy=45
 ...
 Collected 60 updates in 5-minute window
-```
+
+```text
 
 ---
 
 ## Testing Steps
 
 ### 1. Start Docker
+
 ```bash
 docker-compose -f docker-compose.functions.yml up
-```
+
+```text
 
 Wait for Azurite to start (look for "successfully listening").
 
 ### 2. Start Functions (in another terminal)
+
 ```bash
 cd src/functions/websocket_listener
 func start
-```
+
+```text
 
 ### 3. Verify Connection
 
@@ -116,27 +135,33 @@ Check the logs for:
 ### 4. Manual Trigger (Optional)
 
 If you don't want to wait for 5-minute timer:
+
 ```bash
 curl -X POST http://127.0.0.1:7071/admin/functions/websocket_listener \
   -H "Content-Type: application/json" \
   -d '{}'
-```
+
+```text
 
 ### 5. Stop
 
 ```bash
+
 # In docker terminal
+
 Ctrl+C
 
 # In functions terminal
+
 Ctrl+C
-```
+
+```text
 
 ---
 
 ## Documentation Updated
 
-Created: `LOCAL_TESTING_GUIDE.md`
+Created: `LOCAL*TESTING*GUIDE.md`
 
 This guide includes:
 - ✅ Quick start steps
@@ -149,14 +174,16 @@ This guide includes:
 
 ## File Changes Summary
 
-```
+```text
+
 docker-compose.functions.yml
 ├── version: 3.8  →  3.3 ✅
 ├── environment format updated ✅
 ├── healthcheck removed ✅
 ├── Added WEBSOCKET_URL ✅
 └── Added TARGET_UID ✅
-```
+
+```text
 
 **File is now compatible with all Docker Compose versions!**
 
@@ -165,9 +192,13 @@ docker-compose.functions.yml
 ## Next Steps
 
 1. ✅ Run docker-compose (should work now!)
+
 2. ✅ Start functions locally
+
 3. ✅ Verify WebSocket connection
+
 4. ✅ See occupancy data flowing
+
 5. ✅ Deploy to Azure (when ready)
 
 ---
@@ -176,7 +207,8 @@ docker-compose.functions.yml
 
 ```bash
 docker-compose -f docker-compose.functions.yml up
-```
+
+```text
 
 **It should work without errors!**
 
@@ -184,13 +216,13 @@ docker-compose -f docker-compose.functions.yml up
 
 ## If You Still Get Issues
 
-**Check:**
+### Check
 - `docker --version` (ensure Docker installed)
 - `docker-compose --version` (ensure v1.29+)
 - Internet connection (for WebSocket)
 - Port availability (7071, 10000-10002)
 
-**See:** `LOCAL_TESTING_GUIDE.md` for troubleshooting
+**See:** `LOCAL*TESTING*GUIDE.md` for troubleshooting
 
 ---
 

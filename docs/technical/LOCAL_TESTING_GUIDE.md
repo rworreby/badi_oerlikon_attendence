@@ -9,26 +9,37 @@
 ### 1. Start Docker Containers
 
 ```bash
-# From project root
-docker-compose -f docker-compose.functions.yml up
-```
 
-**Expected output:**
-```
+# From project root
+
+docker-compose -f docker-compose.functions.yml up
+
+```text
+
+### Expected output
+
+```text
+
 azurite_1    | Azurite Blob service successfully listening at http://0.0.0.0:10000
 functions_1  | Azure Functions Core Tools Version
-```
+
+```text
 
 ### 2. Start Function in Another Terminal
 
 ```bash
+
 # In another terminal, from project root
+
 cd src/functions/websocket_listener
 func start
-```
 
-**Expected output:**
-```
+```text
+
+### Expected output
+
+```text
+
 Azure Functions Core Tools Version
 ...
 Now listening on: 127.0.0.1:7071
@@ -36,16 +47,20 @@ Http Functions:
     websocket_listener: [TimerTrigger] (Disabled - runs on schedule)
 
 For detailed output, run func with --verbose flag.
-```
+
+```text
 
 ### 3. Manually Trigger the Function (Optional)
 
 ```bash
+
 # In a third terminal
+
 curl -X POST http://127.0.0.1:7071/admin/functions/websocket_listener \
   -H "Content-Type: application/json" \
   -d '{}'
-```
+
+```text
 
 Or wait for the automatic trigger (every 5 minutes).
 
@@ -55,9 +70,10 @@ Or wait for the automatic trigger (every 5 minutes).
 
 ### Success Indicators
 
-**In the functions terminal, you should see:**
+### In the functions terminal, you should see
 
-```
+```text
+
 2026-02-17T23:00:00.000 [Information] WebSocket listener started at 2026-02-17T23:00:00.000000+00:00
 2026-02-17T23:00:01.000 [Information] Connecting to: wss://badi-public.crowdmonitor.ch:9591/api, monitoring UID: SSD-7
 2026-02-17T23:00:02.000 [Information] Connected to WebSocket: wss://badi-public.crowdmonitor.ch:9591/api
@@ -69,48 +85,63 @@ Or wait for the automatic trigger (every 5 minutes).
 2026-02-17T23:05:00.000 [Information] 5-minute window complete. Collected 60 updates.
 2026-02-17T23:05:01.000 [Information] Saved data to blob: 2026-02-17/23-00-to-23-05.json
 2026-02-17T23:05:02.000 [Information] Stats: count=60, min=45, max=52, avg=48.3
-```
+
+```text
 
 ### Troubleshooting
 
-**No connection to WebSocket:**
-```
+### No connection to WebSocket
+
+```text
+
 Check firewall rules - port 9591 should be accessible
 Test: curl -I https://badi-public.crowdmonitor.ch
-```
 
-**Function not triggering:**
-```
+```text
+
+### Function not triggering
+
+```text
+
 Timer triggers don't run while function is in development mode
 Manually trigger with: curl -X POST http://127.0.0.1:7071/admin/functions/websocket_listener
-```
 
-**Azurite not starting:**
-```
+```text
+
+### Azurite not starting
+
+```text
+
 docker-compose down
 docker-compose -f docker-compose.functions.yml up --build
-```
+
+```text
 
 ---
 
 ## Stopping
 
 ```bash
+
 # In the docker-compose terminal
+
 Ctrl+C
 
 # In the functions terminal
+
 Ctrl+C
 
 # Clean up (if needed)
+
 docker-compose -f docker-compose.functions.yml down
-```
+
+```text
 
 ---
 
 ## Docker-Compose File Changes
 
-**Fixed issues:**
+### Fixed issues
 - ✅ Version changed from 3.8 to 3.3 (compatibility)
 - ✅ Environment format updated (key: value instead of key=value)
 - ✅ Removed healthcheck (sometimes causes issues locally)
@@ -137,8 +168,10 @@ After running locally:
 Once local testing succeeds:
 
 ```bash
-# Follow DEPLOYMENT_GUIDE_WEBSOCKET.md
-```
+
+# Follow DEPLOYMENT*GUIDE*WEBSOCKET.md
+
+```text
 
 ---
 
@@ -156,7 +189,8 @@ Once local testing succeeds:
 
 ## Full Workflow
 
-```
+```text
+
 Step 1: docker-compose up                (Start services)
          ↓
 Step 2: func start                        (Start functions)
@@ -168,9 +202,12 @@ Step 4: Verify data flow                  (Check messages)
 Step 5: Stop (Ctrl+C)                     (Clean shutdown)
          ↓
 Step 6: Deploy to Azure                   (Go live)
-```
+
+```text
 
 Ready to test? Run:
+
 ```bash
 docker-compose -f docker-compose.functions.yml up
-```
+
+```text

@@ -10,13 +10,13 @@ Successfully reorganized and cleaned up the repository to follow professional do
 
 ### 📁 Root Directory Cleanup
 
-**Before:**
+### Before
 - 15+ files at root level (messy, hard to navigate)
 - 6 markdown files scattered at root
 - Temporary log files (nohup.out)
 - Outdated configuration files
 
-**After:**
+### After
 - Only 9 essential files at root
 - 2 markdown files (README.md, QUICKSTART.md - primary entry points)
 - No temporary files
@@ -27,31 +27,35 @@ Successfully reorganized and cleaned up the repository to follow professional do
 Moved 6 markdown files into logical categories:
 
 #### docs/deployment/ (9 files)
-- `DEPLOYMENT_GUIDE_WEBSOCKET.md` - Main deployment guide
-- `AZURE_INSTALLATION_SUMMARY.md` - Azure tool setup
-- `AZURE_SETUP_COMPLETE.md` - Quick reference
-- `AZURE_TOOLS_SETUP.md` - Detailed installation
+
+- `DEPLOYMENT*GUIDE*WEBSOCKET.md` - Main deployment guide
+- `AZURE*INSTALLATION*SUMMARY.md` - Azure tool setup
+- `AZURE*SETUP*COMPLETE.md` - Quick reference
+- `AZURE*TOOLS*SETUP.md` - Detailed installation
 - `AZURE_DEPLOYMENT.md` - Azure setup details
-- `AZURE_FUNCTIONS_GUIDE.md` - Functions config
+- `AZURE*FUNCTIONS*GUIDE.md` - Functions config
 - `DEPLOYMENT_CHECKLIST.md` - Pre-deployment checklist
-- `READY_TO_DEPLOY.md` - Readiness check
+- `READY*TO*DEPLOY.md` - Readiness check
 - `GITHUB_SECRETS.md` - CI/CD secrets
 
 #### docs/technical/ (10 files)
-- `LOCAL_TESTING_GUIDE.md`
-- `LOCAL_TESTING_COMPLETE.md`
-- `DOCKER_FIX_SUMMARY.md`
+
+- `LOCAL*TESTING*GUIDE.md`
+- `LOCAL*TESTING*COMPLETE.md`
+- `DOCKER*FIX*SUMMARY.md`
 - `TIMEOUT_CONSIDERATIONS.md`
-- `TIMEOUT_QUICK_REF.md`
+- `TIMEOUT*QUICK*REF.md`
 - `CHANGES_MADE.md`
 - `FILES_CREATED.md`
 - **`DOCUMENTATION_REORGANIZATION.md`** ← NEW
 - **`REORGANIZATION_SUMMARY.md`** ← NEW
 
 #### docs/architecture/ (7 files)
+
 - Existing architecture documentation maintained
 
 #### docs/migration/ (5 files)
+
 - Existing migration documentation maintained
 
 ### 🗑️ Files Removed
@@ -60,7 +64,8 @@ Moved 6 markdown files into logical categories:
 
 ### 📋 Root Level Files Now
 
-```
+```text
+
 .env.example           - Environment configuration template
 .gitignore            - Git ignore rules
 LICENSE               - Project license
@@ -70,7 +75,8 @@ pyproject.toml        - Python project config
 requirements.txt      - Python dependencies
 docker-compose.functions.yml - Docker Compose setup
 install-azure-tools.sh - Azure tools installation script
-```
+
+```text
 
 ## Navigation Improvements
 

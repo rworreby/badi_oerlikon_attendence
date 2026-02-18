@@ -36,16 +36,19 @@ You have **zero timeout concerns** with the current crawler.
 
 ### Cron Schedule Clarification
 
-```
+```text
+
 Schedule: "0 0 * * * *"
 Means:    "Run at the start of every hour"
 Duration: Takes ~2-4 seconds
           Then stops and waits for next trigger
-```
+
+```text
 
 **The confusion:** The 1-hour interval between runs is NOT the function's execution time. Each run is independent:
 
-```
+```text
+
 Execution Timeline:
 ┌─────────────────────────────────────────────────────────┐
 │                     1 Hour (3600 seconds)               │
@@ -55,7 +58,8 @@ Execution Timeline:
 └────────────┴──────────────┬───────────────────────────────┘
                             │
                             └─ NEXT HOUR - RUN 2 starts (2-4 sec)
-```
+
+```text
 
 Each individual run must complete within 10 minutes. Since ours completes in ~2-4 seconds, we're safe.
 
@@ -65,7 +69,8 @@ Each individual run must complete within 10 minutes. Since ours completes in ~2-
 
 ### Execution Time Analysis
 
-```
+```text
+
 Total Execution: ~2-4 seconds
 
 ├─ Initialize components:    ~0.1s
@@ -83,7 +88,8 @@ Total Execution: ~2-4 seconds
 │  └─ Azure Storage API call
 │
 └─ Logging & overhead:      ~0.1s
-```
+
+```text
 
 **Network I/O** dominates the time. The pool website responds quickly (< 2 seconds typically).
 
@@ -98,20 +104,25 @@ import time
 
 def main(mytimer: func.TimerRequest) -> None:
     start_time = time.time()
-    
-    # ... fetch, parse, save ...
-    
-    total_time = time.time() - start_time
-    logger.log_info(f"Crawler execution completed in {total_time:.2f}s")
-```
 
-**Logs you'll see:**
-```
+    # ... fetch, parse, save ...
+
+
+    total*time = time.time() - start*time
+    logger.log*info(f"Crawler execution completed in {total*time:.2f}s")
+
+```text
+
+### Logs you'll see
+
+```text
+
 Data fetched successfully in 1.43s
 Data parsed successfully in 0.67s
 Data saved to blob storage in 0.82s
 Crawler execution completed successfully in 3.02s
-```
+
+```text
 
 ---
 
@@ -119,37 +130,43 @@ Crawler execution completed successfully in 3.02s
 
 ### Consumption Plan (Current) ⭐
 
-```
+```text
+
 ├─ Cost: $1-5/month
 ├─ Default timeout: 5 minutes
 ├─ Hard limit: 10 minutes (non-extendable)
 ├─ Recommended for: Quick tasks (<5 min)
 └─ Our usage: ~2-4s = ✅ Perfect fit
-```
+
+```text
 
 **When to keep:** Current crawler performance
 **When to upgrade:** If crawler grows to >5 minutes consistently
 
 ### Premium Plan
 
-```
+```text
+
 ├─ Cost: ~$35-150/month (depending on instance size)
 ├─ Default timeout: 30 minutes
 ├─ Hard limit: 30 minutes
 ├─ Recommended for: Longer processing tasks (5-30 min)
 └─ Our usage: 2-4s = 🎯 Overkill, but available if needed
-```
+
+```text
 
 **Upgrade benefit:** More flexibility for future growth
 
 ### Dedicated Plan (App Service)
 
-```
+```text
+
 ├─ Cost: $12+/month (depending on tier)
 ├─ Timeout: Fully configurable (no hard limits)
 ├─ Recommended for: Very long-running tasks (30+ min)
 └─ Our usage: 2-4s = 🎯 Complete overkill
-```
+
+```text
 
 **Upgrade benefit:** Ultimate flexibility, but much higher cost
 
@@ -158,16 +175,19 @@ Crawler execution completed successfully in 3.02s
 ## Scenarios and Solutions
 
 ### Scenario 1: Crawler Stays ~2-4 Seconds ✅
+
 **Current status - no action needed**
 
 Consumption Plan perfectly suitable. You have 240-300x safety buffer.
 
 ### Scenario 2: Crawler Grows to 30-60 Seconds 🟢
+
 **Still safe on Consumption Plan**
 
 Still well within the 10-minute limit. No upgrade needed.
 
 ### Scenario 3: Crawler Grows to 3-5 Minutes 🟡
+
 **Getting close to limits**
 
 - Consumption Plan still works (5 min default, 10 min max)
@@ -175,6 +195,7 @@ Still well within the 10-minute limit. No upgrade needed.
 - Monitor execution times in Azure Portal
 
 ### Scenario 4: Crawler Exceeds 5 Minutes 🔴
+
 **Need to take action**
 
 **Option A: Optimize** (recommended first step)
@@ -183,12 +204,16 @@ Still well within the 10-minute limit. No upgrade needed.
 - Implement request timeouts
 
 **Option B: Upgrade Plan** (if optimization not possible)
+
 ```bash
+
 # Switch to Premium Plan
+
 az functionapp plan update \
   --name badi-oerlikon-plan \
   --sku EP1
-```
+
+```text
 
 **Option C: Break into Multiple Functions** (rarely needed)
 - Create separate functions for fetch, parse, save
@@ -201,27 +226,37 @@ az functionapp plan update \
 
 ### View Current Execution Times
 
-**In Azure Portal:**
+### In Azure Portal
+
 1. Go to Function App → Monitor
+
 2. Look for "Duration" metric
+
 3. Check individual function invocations
 
-**Via CLI:**
+### Via CLI
+
 ```bash
+
 # View last 10 invocations
+
 az functionapp log tail \
   --resource-group badi-oerlikon-rg \
   --name badi-oerlikon-dev-func \
   --number 10
-```
 
-**Expected output:**
-```
+```text
+
+### Expected output
+
+```text
+
 [2026-02-17T12:00:05Z] Data fetched successfully in 1.45s
 [2026-02-17T12:00:06Z] Data parsed successfully in 0.62s
 [2026-02-17T12:00:07Z] Data saved to blob storage in 0.78s
 [2026-02-17T12:00:07Z] Crawler execution completed successfully in 2.95s
-```
+
+```text
 
 ### Set Up Alerts
 
@@ -236,38 +271,52 @@ az monitor metrics alert create \
   --window-size 5m \
   --condition "avg Duration > 300000" \
   --action email-action
-```
+
+```text
 
 ---
 
 ## Best Practices to Avoid Timeout Issues
 
 ### 1. Monitor Regularly
+
 ```bash
+
 # Weekly check
+
 az monitor metrics list \
   --resource-group badi-oerlikon-rg \
   --resource-type "Microsoft.Web/sites" \
   --resource-name badi-oerlikon-dev-func \
   --metric Duration --start-time 2026-02-10 --interval PT1H
-```
+
+```text
 
 ### 2. Add Timeouts to External Calls
+
 ```python
+
 # In fetcher.py
+
 response = requests.get(url, timeout=10)  # Don't hang forever
-```
+
+```text
 
 ### 3. Log Step Timings
+
 ```python
-# Now done in __init__.py
-fetch_time = time.time() - fetch_start
-logger.log_info(f"Fetch took {fetch_time:.2f}s")
-```
+
+# Now done in **init**.py
+
+fetch*time = time.time() - fetch*start
+logger.log*info(f"Fetch took {fetch*time:.2f}s")
+
+```text
 
 ### 4. Set Up Gradual Alerts
+
 - Yellow alert: >1 minute
-- Orange alert: >5 minutes  
+- Orange alert: >5 minutes
 - Red alert: >9 minutes
 
 ---
@@ -276,26 +325,32 @@ logger.log_info(f"Fetch took {fetch_time:.2f}s")
 
 Let's say the pool website becomes very slow (unlikely, but possible):
 
-```
+```text
+
 Current:      1.5s (fetch) + 0.7s (parse) + 0.8s (save) = 3.0s ✅
 Slower site:  5s (fetch) + 0.7s (parse) + 0.8s (save) = 6.5s ✅
 Very slow:   15s (fetch) + 0.7s (parse) + 0.8s (save) = 16.5s ❌ TIMEOUT
-```
 
-**In the "Very slow" case:**
+```text
+
+### In the "Very slow" case
 - Not the function's fault (site is slow)
 - You'd need Premium Plan
 - Or add request timeout and implement retry logic
 
-**Best solution:**
+### Best solution
+
 ```python
+
 # Add timeout and handle gracefully
+
 try:
     response = requests.get(url, timeout=8)
 except requests.Timeout:
     logger.log_error("Website timeout - will retry next hour")
     return  # Exit gracefully, don't crash
-```
+
+```text
 
 ---
 

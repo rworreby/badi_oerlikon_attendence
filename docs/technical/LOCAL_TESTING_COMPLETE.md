@@ -52,7 +52,8 @@
   - HTTP endpoint: http://localhost:7071
   - Functions loaded and recognized
   - WebSocket listener configured for SSD-7 (BADI Oerlikon)
-```
+
+```text
 
 ### Configuration Ready
 
@@ -68,18 +69,24 @@
 
 ### 1. Monitor the Timer Execution
 
-The `websocket_listener` function has a **timer trigger that runs every 5 minutes**. 
+The `websocket_listener` function has a **timer trigger that runs every 5 minutes**.
 
 To see it in action, you can either:
 
 **Option A: Wait for timer to trigger naturally**
+
 ```bash
+
 # Keep monitoring logs
-docker logs -f badi_oerlikon_attendence_functions_1
-```
+
+docker logs -f badi*oerlikon*attendence*functions*1
+
+```text
 
 Watch for messages like:
-```
+
+```text
+
 [timestamp] WebSocket listener started at ...
 Connected to WebSocket: wss://badi-public.crowdmonitor.ch:9591/api
 Update 1: occupancy=45
@@ -87,20 +94,27 @@ Update 2: occupancy=45
 ...
 Collected 60 updates in 5-minute window
 Saved data to blob: 2026-02-17/10-00-to-10-05.json
-```
+
+```text
 
 **Option B: Access the Functions Dashboard**
+
 ```bash
 curl http://localhost:7071/
-```
+
+```text
 
 ### 2. Monitor Blob Storage
 
 Check what data is being saved to Azurite:
+
 ```bash
+
 # List stored objects
+
 curl http://localhost:10000/devstoreaccount1/scraped-data?restype=container&comp=list
-```
+
+```text
 
 ### 3. Verify WebSocket Connection
 
@@ -114,7 +128,8 @@ The function automatically connects to the CrowdMonitor WebSocket when it runs. 
 
 ## Architecture
 
-```
+```text
+
 Your System
 ├── Docker Compose v3.3
 │   ├── Azurite (Storage Emulator)
@@ -158,7 +173,8 @@ Function Execution Flow:
     │   Save JSON   │
     │   to Blob     │
     └───────────────┘
-```
+
+```text
 
 ---
 
@@ -182,28 +198,40 @@ Function Execution Flow:
 ## How to Verify Everything Works
 
 ### 1. Check Docker Status
+
 ```bash
 docker ps | grep badi
-```
+
+```text
+
 Expected: Two containers running (azurite, functions)
 
 ### 2. Verify WebSocket Module
+
 ```bash
-docker exec badi_oerlikon_attendence_functions_1 python3 \
+docker exec badi*oerlikon*attendence*functions*1 python3 \
   -c "from websocket_listener import main; print('✓ Ready')"
-```
+
+```text
+
 Expected: `✓ Ready`
 
 ### 3. Check Function Endpoint
+
 ```bash
 curl http://localhost:7071/ | head -5
-```
+
+```text
+
 Expected: HTML page with "Azure Function App is up and running"
 
 ### 4. Monitor Execution
+
 ```bash
-docker logs -f badi_oerlikon_attendence_functions_1
-```
+docker logs -f badi*oerlikon*attendence*functions*1
+
+```text
+
 Expected: See timer trigger, WebSocket connection, and data collection messages
 
 ---
@@ -211,25 +239,33 @@ Expected: See timer trigger, WebSocket connection, and data collection messages
 ## Troubleshooting
 
 ### Functions not loading
+
 ```bash
-docker logs badi_oerlikon_attendence_functions_1 2>&1 | grep -i error
-```
+docker logs badi*oerlikon*attendence*functions*1 2>&1 | grep -i error
+
+```text
 
 ### Import errors
+
 ```bash
-docker exec badi_oerlikon_attendence_functions_1 python3 -c \
+docker exec badi*oerlikon*attendence*functions*1 python3 -c \
   "from websocket_listener import main"
-```
+
+```text
 
 ### Blob storage not working
+
 ```bash
 curl http://localhost:10000/devstoreaccount1?comp=list
-```
+
+```text
 
 ### Container not responding
+
 ```bash
-docker restart badi_oerlikon_attendence_functions_1
-```
+docker restart badi*oerlikon*attendence*functions*1
+
+```text
 
 ---
 
@@ -241,9 +277,12 @@ docker restart badi_oerlikon_attendence_functions_1
 ✅ **Azurite emulator ready to store data**
 ✅ **Timer triggers set for automatic 5-minute intervals**
 
-**Ready to proceed with:**
+### Ready to proceed with
+
 1. Monitoring the live timer execution (currently every 5 minutes)
+
 2. Deploying to Azure when confirmed working locally
+
 3. Running parallel with old scraper for 1 week validation
 
 ---
@@ -255,9 +294,9 @@ When ready to deploy to Azure:
 1. Stop local testing:
    ```bash
    docker-compose -f docker-compose.functions.yml down
-   ```
+   ```text
 
-2. Deploy infrastructure (using DEPLOYMENT_GUIDE_WEBSOCKET.md)
+2. Deploy infrastructure (using DEPLOYMENT*GUIDE*WEBSOCKET.md)
 
 3. Deploy function code to Azure
 

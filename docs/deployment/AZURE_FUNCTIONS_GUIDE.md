@@ -5,14 +5,15 @@ This guide walks you through deploying the updated BADI Oerlikon system with **A
 ## What Changed
 
 ✅ **Container Instance** → **Azure Functions** (Consumption Plan - Pay as you go)
-✅ **Docker Crawler** → **Python Function with Timer Trigger** 
+✅ **Docker Crawler** → **Python Function with Timer Trigger**
 ✅ **Cost Reduction** - From ~$100/month to ~$1-5/month for crawler
 ✅ **Automatic Scaling** - Scales to zero when not running
 ✅ **Simpler Management** - No need to manage containers
 
 ## Architecture Overview
 
-```
+```text
+
 Every Hour
     ↓
 Azure Functions Timer Trigger
@@ -24,7 +25,8 @@ Fetch & Parse Data
 Azure Blob Storage (JSON)
     ↓
 Web App reads from storage
-```
+
+```text
 
 ## Prerequisites
 
@@ -39,7 +41,8 @@ The infrastructure now includes Azure Functions instead of Container Instance.
 ```bash
 cd azure
 ./deploy.sh
-```
+
+```text
 
 This creates:
 - ✅ Web App (App Service)
@@ -52,27 +55,37 @@ This creates:
 ### Option A: Using Azure Functions Core Tools (Local Dev)
 
 ```bash
+
 # Install Azure Functions Core Tools
+
 # macOS: brew tap azure/azure && brew install azure-functions-core-tools@4
+
 # Linux: curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > microsoft.gpg
+
 # Windows: Download from https://github.com/Azure/azure-functions-core-tools
 
 # Test locally with Azurite
+
 docker-compose -f docker-compose.functions.yml up
 
 # In another terminal, test the function
+
 cd src/functions
 func start
-```
+
+```text
 
 ### Option B: Deploy to Azure (Recommended)
 
 ```bash
+
 # Set variables
-RESOURCE_GROUP_NAME="badi-oerlikon-rg"
-FUNCTION_APP_NAME="badi-oerlikon-dev-func"
+
+RESOURCE*GROUP*NAME="badi-oerlikon-rg"
+FUNCTION*APP*NAME="badi-oerlikon-dev-func"
 
 # Package function app
+
 cd src/functions
 mkdir -p build
 cp -r crawler_timer build/
@@ -82,21 +95,25 @@ zip -r ../function-app.zip .
 cd ..
 
 # Deploy
+
 az functionapp deployment source config-zip \
-  --resource-group $RESOURCE_GROUP_NAME \
-  --name $FUNCTION_APP_NAME \
+  --resource-group $RESOURCE*GROUP*NAME \
+  --name $FUNCTION*APP*NAME \
   --src function-app.zip
-```
+
+```text
 
 ## Step 3: Configure Function Settings
 
 The function reads these environment variables (set in Bicep):
 
-```
-AZURE_STORAGE_CONNECTION_STRING  - Storage account connection
-BLOB_CONTAINER_NAME              - 'scraped-data'
+```text
+
+AZURE*STORAGE*CONNECTION_STRING  - Storage account connection
+BLOB*CONTAINER*NAME              - 'scraped-data'
 SCRAPE_URL                       - URL to scrape
-```
+
+```text
 
 ## Performance & Timeout Considerations ⏱️
 
@@ -136,7 +153,9 @@ You could comfortably go to **5-6 minutes** and still be well within the 10-minu
 If the crawler grows to exceed 10 minutes (unlikely):
 
 1. **Upgrade to Premium Plan** (easiest): `az functionapp plan update --name plan-name --sku EP1`
+
 2. **Use Dedicated (App Service) Plan**: Better for long-running functions
+
 3. **Split into multiple functions**: Decompose into multiple logical steps (not recommended for simple crawlers)
 
 ### Monitoring Execution Time
@@ -144,17 +163,21 @@ If the crawler grows to exceed 10 minutes (unlikely):
 Track actual execution time in Azure Portal:
 
 ```bash
+
 # View function logs
+
 az functionapp log tail \
   --resource-group badi-oerlikon-rg \
   --name badi-oerlikon-dev-func
 
 # Check recent invocations
+
 az monitor metrics list \
   --resource-group badi-oerlikon-rg \
   --resource-type "Microsoft.Web/sites" \
   --resource-name badi-oerlikon-dev-func
-```
+
+```text
 
 Look for log lines like: `"Crawler execution completed in 3.2 seconds"` (you can add this if needed)
 
@@ -162,48 +185,59 @@ View current settings:
 
 ```bash
 az functionapp config appsettings list \
-  --resource-group $RESOURCE_GROUP_NAME \
-  --name $FUNCTION_APP_NAME
-```
+  --resource-group $RESOURCE*GROUP*NAME \
+  --name $FUNCTION*APP*NAME
+
+```text
 
 ## Step 4: Test the Function
 
 ### Monitor Function Execution
 
 ```bash
+
 # Stream logs
+
 az functionapp log tail \
-  --resource-group $RESOURCE_GROUP_NAME \
-  --name $FUNCTION_APP_NAME
+  --resource-group $RESOURCE*GROUP*NAME \
+  --name $FUNCTION*APP*NAME
 
 # Or view in portal
+
 # Azure Portal → Function App → Functions → crawler_timer → Monitor
-```
+
+```text
 
 ### Manually Trigger Function
 
 ```bash
+
 # Get function key
+
 FUNCTION_KEY=$(az functionapp keys list \
-  --resource-group $RESOURCE_GROUP_NAME \
-  --name $FUNCTION_APP_NAME \
+  --resource-group $RESOURCE*GROUP*NAME \
+  --name $FUNCTION*APP*NAME \
   --query "functionKeys.default" -o tsv)
 
 # Trigger function
-FUNCTION_URL="https://$FUNCTION_APP_NAME.azurewebsites.net/admin/functions/crawler_timer"
+
+FUNCTION*URL="https://$FUNCTION*APP*NAME.azurewebsites.net/admin/functions/crawler*timer"
 
 curl -X POST $FUNCTION_URL \
   -H "x-functions-key: $FUNCTION_KEY"
-```
+
+```text
 
 ## Step 5: Verify Data Collection
 
 Check that the function is writing data:
 
 ```bash
+
 # List blobs in storage
+
 STORAGE_ACCOUNT=$(az deployment group show \
-  --resource-group $RESOURCE_GROUP_NAME \
+  --resource-group $RESOURCE*GROUP*NAME \
   --name main \
   --query properties.outputs.storageAccountName.value -o tsv)
 
@@ -211,15 +245,18 @@ az storage blob list \
   --container-name scraped-data \
   --account-name $STORAGE_ACCOUNT \
   -o table
-```
+
+```text
 
 ## Function Schedule (Cron Format)
 
 The function runs on this schedule (in `function.json`):
 
-```
+```text
+
 "schedule": "0 0 * * * *"
-```
+
+```text
 
 This means: **Every hour at the start of the hour (00 minutes)**
 
@@ -229,7 +266,8 @@ To change schedule, modify `src/functions/crawler_timer/function.json`:
 {
   "schedule": "0 */6 * * * *"  // Every 6 hours
 }
-```
+
+```text
 
 Common patterns:
 - `0 0 * * * *` - Every hour
@@ -240,14 +278,21 @@ Common patterns:
 ## Deployment via GitHub Actions
 
 GitHub Actions now only deploys:
+
 1. Web App (from Docker image)
+
 2. Function App (from source code)
 
 The workflow:
+
 1. Runs tests and linting
+
 2. Builds web app Docker image
+
 3. Pushes to Container Registry
+
 4. Deploys web app
+
 5. Deploys function code to Azure Functions
 
 ## Monitoring and Alerts
@@ -255,50 +300,63 @@ The workflow:
 ### View Function Metrics
 
 ```bash
+
 # Get last 24 hours of executions
+
 az monitor metrics list \
-  --resource /subscriptions/{subscriptionId}/resourceGroups/$RESOURCE_GROUP_NAME/providers/Microsoft.Web/sites/$FUNCTION_APP_NAME \
+  --resource /subscriptions/{subscriptionId}/resourceGroups/$RESOURCE*GROUP*NAME/providers/Microsoft.Web/sites/$FUNCTION*APP*NAME \
   --metric FunctionExecutionCount \
   --start-time 2024-01-15T00:00:00Z
-```
+
+```text
 
 ### Set Up Alerts
 
 ```bash
+
 # Alert when function fails
+
 az monitor metrics alert create \
-  --resource-group $RESOURCE_GROUP_NAME \
+  --resource-group $RESOURCE*GROUP*NAME \
   --name "Function Failure Alert" \
-  --scopes /subscriptions/{subscriptionId}/resourceGroups/$RESOURCE_GROUP_NAME/providers/Microsoft.Web/sites/$FUNCTION_APP_NAME \
+  --scopes /subscriptions/{subscriptionId}/resourceGroups/$RESOURCE*GROUP*NAME/providers/Microsoft.Web/sites/$FUNCTION*APP*NAME \
   --condition "avg FunctionExecutionCount < 1" \
   --window-size 1h \
   --evaluation-frequency 30m
-```
+
+```text
 
 ## Troubleshooting
 
 ### Function not running
 
 ```bash
+
 # Check function app status
+
 az functionapp show \
-  --resource-group $RESOURCE_GROUP_NAME \
-  --name $FUNCTION_APP_NAME
+  --resource-group $RESOURCE*GROUP*NAME \
+  --name $FUNCTION*APP*NAME
 
 # Check if enabled
+
 az functionapp config show \
-  --resource-group $RESOURCE_GROUP_NAME \
-  --name $FUNCTION_APP_NAME
-```
+  --resource-group $RESOURCE*GROUP*NAME \
+  --name $FUNCTION*APP*NAME
+
+```text
 
 ### Storage connection error
 
 ```bash
+
 # Verify connection string
+
 az storage account show-connection-string \
   --name $STORAGE_ACCOUNT \
-  --resource-group $RESOURCE_GROUP_NAME
-```
+  --resource-group $RESOURCE*GROUP*NAME
+
+```text
 
 ### Function timeout
 
@@ -308,7 +366,8 @@ Increase function timeout in `src/functions/local.settings.json`:
 {
   "functionTimeout": "00:05:00"  // 5 minutes
 }
-```
+
+```text
 
 ## Local Development
 
@@ -323,7 +382,7 @@ services:
     image: mcr.microsoft.com/azure-storage/azurite
     ports:
       - "10000:10000"
-  
+
   function:
     image: mcr.microsoft.com/azure-functions/python:4-python3.9
     ports:
@@ -332,13 +391,15 @@ services:
       - ./src/functions:/home/site/wwwroot
     environment:
       - AzureWebJobsStorage=DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=SkeyBk5sNzUtNTcxNGQzOTdjMDUyNDQ=;BlobEndpoint=http://azurite:10000/devstoreaccount1;
-```
+
+```text
 
 Run:
 
 ```bash
 docker-compose -f docker-compose.functions.yml up
-```
+
+```text
 
 ### Testing Function Locally
 
@@ -347,11 +408,14 @@ cd src/functions
 pip install -r requirements.txt
 
 # Install Azure Functions Core Tools
+
 func new --name crawler_timer --template "Timer trigger"
 
 # Run locally
+
 func start
-```
+
+```text
 
 ## Cost Comparison
 
@@ -379,9 +443,13 @@ func start
 ## Next Steps
 
 1. Deploy infrastructure: `cd azure && ./deploy.sh`
+
 2. Deploy function code (see Step 2)
+
 3. Test the deployment
+
 4. Monitor function executions
+
 5. Set up alerts for failures
 
 ## Resources
