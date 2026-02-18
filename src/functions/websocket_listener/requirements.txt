@@ -1,4 +1,4 @@
-azure-functions==1.13.0
+azure-functions==1.13.2
 websockets==11.0.3
 azure-storage-blob==12.18.0
 azure-identity==1.14.0

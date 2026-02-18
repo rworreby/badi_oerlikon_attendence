@@ -38,9 +38,12 @@ class WebSocketListener:
         Flow:
         1. Connect to WebSocket
         2. Send "all" command (as expected by API)
-        3. Receive JSON array of occupancy data
+        3. Receive JSON array of occupancy data (API sends every 3-4 sec)
         4. Extract target UID data
         5. Continue collecting for 5 minutes
+        
+        Note: API updates every ~3-4 seconds, not on demand.
+        In a 5-minute window (~300 sec), expect 75-100 messages.
         
         Returns:
             List of {'occupancy': int, 'timestamp': str} dicts
@@ -137,7 +140,9 @@ class WebSocketListener:
             
             # Data is an array; find the matching UID
             if not isinstance(data_array, list):
-                self.logger.warning(f"Unexpected message format: {type(data_array)}")
+                self.logger.warning(
+                    f"Unexpected message format: {type(data_array)}"
+                )
                 return None
             
             for element in data_array:
@@ -147,7 +152,8 @@ class WebSocketListener:
                     
                     if occupancy is None:
                         self.logger.warning(
-                            f"No 'currentfill' field for {self.target_uid}: {element}"
+                            f"No 'currentfill' for {self.target_uid}: "
+                            f"{element}"
                         )
                         return None
                     
