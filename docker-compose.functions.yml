@@ -1,0 +1,41 @@
+version: '3.3'
+
+services:
+  # Local Azure Blob Storage Emulator (Azurite)
+  azurite:
+    image: mcr.microsoft.com/azure-storage/azurite
+    ports:
+      - "10000:10000"
+      - "10001:10001"
+      - "10002:10002"
+    environment:
+      AZURITE_ACCOUNTS: "devstoreaccount1:SkeyBk5sNzUtNTcxNGQzOTdjMDUyNDQ="
+    volumes:
+      - azurite_data:/data
+
+  # Python Functions Runtime
+  functions:
+    image: mcr.microsoft.com/azure-functions/python:4-python3.9
+    ports:
+      - "7071:80"
+    depends_on:
+      - azurite
+    volumes:
+      - ./src/functions:/home/site/wwwroot
+    environment:
+      AzureWebJobsStorage: "DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=SkeyBk5sNzUtNTcxNGQzOTdjMDUyNDQ=;BlobEndpoint=http://azurite:10000/devstoreaccount1;"
+      FUNCTIONS_WORKER_RUNTIME: python
+      FUNCTIONS_EXTENSION_VERSION: "~4"
+      AZURE_STORAGE_CONNECTION_STRING: "DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=SkeyBk5sNzUtNTcxNGQzOTdjMDUyNDQ=;BlobEndpoint=http://azurite:10000/devstoreaccount1;"
+      BLOB_CONTAINER_NAME: scraped-data
+      WEBSOCKET_URL: "wss://badi-public.crowdmonitor.ch:9591/api"
+      TARGET_UID: "SSD-7"
+      ASPNETCORE_URLS: "http://+:80"
+      PYTHONPATH: "/home/site/wwwroot"
+
+networks:
+  default:
+    driver: bridge
+
+volumes:
+  azurite_data:
