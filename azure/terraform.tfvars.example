@@ -1,0 +1,6 @@
+# Terraform variables for BADI Oerlikon project
+# Copy this to terraform.tfvars and update as needed
+
+location    = "westeurope"
+project_name = "badi-oerlikon"
+environment = "dev"
