@@ -1,0 +1,12 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "FUNCTIONS_WORKER_RUNTIME": "python",
+    "FUNCTIONS_EXTENSION_VERSION": "~4",
+    "AZURE_STORAGE_CONNECTION_STRING": "DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=SkeyBk5sNzUtNTcxNGQzOTdjMDUyNDQ=;BlobEndpoint=http://127.0.0.1:10000/devstoreaccount1;",
+    "BLOB_CONTAINER_NAME": "scraped-data",
+    "SCRAPE_URL": "https://www.stadt-zuerich.ch/de/stadtleben/sport-und-erholung/sport-und-badeanlagen/hallenbaeder/oerlikon.html"
+  },
+  "ConnectionStrings": {}
+}
